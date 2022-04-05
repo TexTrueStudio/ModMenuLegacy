@@ -12,7 +12,7 @@ public class DescriptionListWidget extends EntryListWidget {
 	private final ModListScreen parent;
 	private final TextRenderer textRenderer;
 	private ModListEntry lastSelected = null;
-	private List<DescriptionEntry> entries = new LinkedList<>();
+	private final List<DescriptionEntry> entries = new LinkedList<>();
 
 	public DescriptionListWidget(MinecraftClient client, int width, int height, int top, int bottom, int entryHeight, ModListScreen parent) {
 		super(client, width, height, top, bottom, entryHeight);
@@ -31,7 +31,7 @@ public class DescriptionListWidget extends EntryListWidget {
 	}
 
 	@Override
-	protected int getEntriesSize() {
+	protected int getEntryCount() {
 		return entries.size();
 	}
 
@@ -74,8 +74,9 @@ public class DescriptionListWidget extends EntryListWidget {
 			this.text = text;
 		}
 
+		// render()
 		@Override
-		public void render(int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered) {
+		public void method_6700(int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
 			MinecraftClient.getInstance().textRenderer.drawWithShadow(text, x, y, 0xAAAAAA);
 		}
 
@@ -89,8 +90,9 @@ public class DescriptionListWidget extends EntryListWidget {
 			// NO-OP
 		}
 
+		// updatePosition
 		@Override
-		public void updatePosition(int index, int x, int y) {
+		public void method_9473(int index, int x, int y, float tickDelta) {
 			// NO-OP
 		}
 	}

@@ -86,10 +86,10 @@ public class ModListScreen extends Screen {
 		modList.setXPos(0);
 		descriptionListWidget = new DescriptionListWidget(client, paneWidth, height, paneY + 60, height - 36, textRenderer.fontHeight + 1, this);
 		descriptionListWidget.setXPos(rightPaneX);
-		ButtonWidget configureButton = new ModMenuTexturedButtonWidget(12341, width - 24, paneY, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64,
-				I18n.translate("modmenu.configure")) {
+		ButtonWidget configureButton = new ModMenuTexturedButtonWidget(12341, width - 24, paneY, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, I18n.translate("modmenu.configure")) {
+			// render
 			@Override
-			public void render(MinecraftClient client, int mouseX, int mouseY) {
+			public void method_891(MinecraftClient client, int mouseX, int mouseY, float tickDelta) {
 				if (hovered) {
 					setTooltip(I18n.translate("modmenu.configure"));
 				}
@@ -101,33 +101,34 @@ public class ModListScreen extends Screen {
 				}
 				visible = active;
 				GlStateManager.color4f(1, 1, 1, 1);
-				super.render(client, mouseX, mouseY);
+				super.method_891(client, mouseX, mouseY, tickDelta);
 			}
 		};
 		int urlButtonWidths = paneWidth / 2 - 2;
 		int cappedButtonWidth = urlButtonWidths > 200 ? 200 : urlButtonWidths;
-		ButtonWidget websiteButton = new ButtonWidget(190, rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
-				I18n.translate("modmenu.website")) {
+		ButtonWidget websiteButton = new ButtonWidget(190, rightPaneX + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20, I18n.translate("modmenu.website")) {
+			// render
 			@Override
-			public void render(MinecraftClient client, int mouseX, int mouseY) {
+			public void method_891(MinecraftClient client, int mouseX, int mouseY, float tickDelta) {
 				visible = selected != null;
 				active = visible && selected.getMetadata().getContact().get("homepage").isPresent();
-				super.render(client, mouseX, mouseY);
+				super.method_891(client, mouseX, mouseY, tickDelta);
 			}
 		};
-		ButtonWidget issuesButton = new ButtonWidget(191, rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20,
-				I18n.translate("modmenu.issues")) {
+		ButtonWidget issuesButton = new ButtonWidget(191, rightPaneX + urlButtonWidths + 4 + (urlButtonWidths / 2) - (cappedButtonWidth / 2), paneY + 36, Math.min(urlButtonWidths, 200), 20, I18n.translate("modmenu.issues")) {
+			// render
 			@Override
-			public void render(MinecraftClient client, int mouseX, int mouseY) {
+			public void method_891(MinecraftClient client, int mouseX, int mouseY, float tickDelta) {
 				visible = selected != null;
 				active = visible && selected.getMetadata().getContact().get("issues").isPresent();
-				super.render(client, mouseX, mouseY);
+				super.method_891(client, mouseX, mouseY, tickDelta);
 			}
 		};
 		this.buttons.add(new ModMenuTexturedButtonWidget(180, paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64) {
+			// render
 			@Override
-			public void render(MinecraftClient client, int mouseX, int mouseY) {
-				super.render(client, mouseX, mouseY);
+			public void method_891(MinecraftClient client, int mouseX, int mouseY, float tickDelta) {
+				super.method_891(client, mouseX, mouseY, tickDelta);
 				if (isHovered()) {
 					setTooltip(I18n.translate("modmenu.toggleFilterOptions"));
 				}
@@ -147,19 +148,21 @@ public class ModListScreen extends Screen {
 			showModCount = true;
 		}
 		this.buttons.add(new ButtonWidget(181, filtersX, 45, sortingWidth, 20, sortingText) {
+			// render
 			@Override
-			public void render(MinecraftClient client, int mouseX, int mouseY) {
+			public void method_891(MinecraftClient client, int mouseX, int mouseY, float tickDelta) {
 				visible = filterOptionsShown;
 				message = (I18n.translate("modmenu.sorting", I18n.translate(ModMenuConfigManager.getConfig().getSorting().getTranslationKey())));
-				super.render(client, mouseY, mouseY);
+				super.method_891(client, mouseY, mouseY, tickDelta);
 			}
 		});
 		this.buttons.add(new ButtonWidget(182, filtersX + sortingWidth + 2, 45, showLibrariesWidth, 20, I18n.translate("modmenu.showLibraries", I18n.translate("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries()))) {
+			// render
 			@Override
-			public void render(MinecraftClient client, int mouseX, int mouseY) {
+			public void method_891(MinecraftClient client, int mouseX, int mouseY, float tickDelta) {
 				visible = filterOptionsShown;
 				message = (I18n.translate("modmenu.showLibraries", I18n.translate("modmenu.showLibraries." + ModMenuConfigManager.getConfig().showLibraries())));
-				super.render(client, mouseX, mouseY);
+				super.method_891(client, mouseX, mouseY, tickDelta);
 			}
 		});
 		this.buttons.add(configureButton);
@@ -353,7 +356,7 @@ public class ModListScreen extends Screen {
 	public static void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
-		Objects.requireNonNull(MinecraftClient.getInstance()).getTextureManager().bindTexture(DrawableHelper.BACKGROUND_TEXTURE);
+		Objects.requireNonNull(MinecraftClient.getInstance()).getTextureManager().bindTexture(DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
 		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		buffer.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
 		buffer.vertex(x1, y2, 0.0D).texture(x1 / 32.0D, y2 / 32.0D).color(red, green, blue, endAlpha).next();

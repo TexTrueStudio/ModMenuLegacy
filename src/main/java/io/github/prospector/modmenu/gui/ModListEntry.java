@@ -20,7 +20,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.texture.NativeImageBackedTexture;
-import net.minecraft.client.texture.TextureUtils;
+import net.minecraft.client.texture.TextureUtil;
 import net.minecraft.util.Identifier;
 
 import net.fabricmc.loader.api.FabricLoader;
@@ -49,13 +49,15 @@ public class ModListEntry implements EntryListWidget.Entry {
 		this.hovered = hovered;
 	}
 
+	// updatePosition()
 	@Override
-	public void updatePosition(int index, int x, int y) {
+	public void method_9473(int index, int x, int y, float tickDelta) {
 		// NO-OP
 	}
 
+	// render()
 	@Override
-	public void render(int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered) {
+	public void method_6700(int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
 		updateHovered(hovered);
 		x += getXOffset();
 		rowWidth -= getXOffset();
@@ -116,7 +118,7 @@ public class ModListEntry implements EntryListWidget.Entry {
 				return cached;
 			}
 			try (InputStream inputStream = Files.newInputStream(path)) {
-				BufferedImage image = TextureUtils.create(Objects.requireNonNull(inputStream));
+				BufferedImage image = TextureUtil.create(Objects.requireNonNull(inputStream));
 				Validate.validState(image.getHeight() == image.getWidth(), "Must be square icon");
 				NativeImageBackedTexture tex = new NativeImageBackedTexture(image);
 				this.list.cacheModIcon(path, tex);
