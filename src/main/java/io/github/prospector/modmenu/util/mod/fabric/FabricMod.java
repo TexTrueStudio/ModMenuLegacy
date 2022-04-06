@@ -45,21 +45,21 @@ public class FabricMod implements Mod {
 		if (modMenuValue != null && modMenuValue.getType() == CustomValue.CvType.OBJECT) {
 			CustomValue.CvObject modMenuObject = modMenuValue.getAsObject();
 			CustomValue parentCv = modMenuObject.get("parent");
-			if (parentCv != null) {
-				if (parentCv.getType() == CustomValue.CvType.STRING) {
-					parentId = Optional.of(parentCv.getAsString());
-				} else if (parentCv.getType() == CustomValue.CvType.OBJECT) {
+			if ( parentCv != null ) {
+				if ( parentCv.getType() == CustomValue.CvType.STRING ) {
+					parentId = Optional.of( parentCv.getAsString() );
+				} else if ( parentCv.getType() == CustomValue.CvType.OBJECT ) {
 					try {
 						CustomValue.CvObject parentObj = parentCv.getAsObject();
 						parentId = CustomValueUtil.getString("id", parentObj);
 						parentData = new ModMenuData.DummyParentData(
-								parentId.orElseThrow(() -> new RuntimeException("Parent object lacks an id")),
-								CustomValueUtil.getString("name", parentObj),
-								CustomValueUtil.getString("description", parentObj),
-								CustomValueUtil.getString("icon", parentObj),
-								CustomValueUtil.getStringSet("badges", parentObj).orElse(new HashSet<>())
+							parentId.orElseThrow(() -> new RuntimeException("Parent object lacks an id")),
+							CustomValueUtil.getString("name", parentObj),
+							CustomValueUtil.getString("description", parentObj),
+							CustomValueUtil.getString("icon", parentObj),
+							CustomValueUtil.getStringSet("badges", parentObj).orElse(new HashSet<>())
 						);
-						if (parentId.orElse("").equals(this.metadata.getId())) {
+						if ( parentId.orElse("").equals( this.metadata.getId() ) ) {
 							parentId = Optional.empty();
 							parentData = null;
 							throw new RuntimeException("Mod declared itself as its own parent");
@@ -135,6 +135,9 @@ public class FabricMod implements Mod {
 		} else if ("java".equals(getId())) {
 			iconSourceId = ModMenu.MOD_ID;
 			iconPath = "assets/" + ModMenu.MOD_ID + "/java_icon.png";
+		} else if ( getAuthors().contains("Legacy Fabric") || getAuthors().contains("Legacy Rewoven") ) {
+			iconSourceId = ModMenu.MOD_ID;
+			iconPath = "assets/" + ModMenu.MOD_ID + "/fabric_icon.png";
 		}
 		final String finalIconSourceId = iconSourceId;
 		ModContainer iconSource = FabricLoader.getInstance().getModContainer(iconSourceId).orElseThrow(() -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + finalIconSourceId));
@@ -155,30 +158,28 @@ public class FabricMod implements Mod {
 	public @NotNull String getDescription() {
 		String description = metadata.getDescription();
 		if (description.isEmpty()) {
-			if ("minecraft".equals(getId())) {
+			if ( "minecraft".equals( getId() ) )
 				return "The base game.";
-			} else if ("java".equals(getId())) {
+			else if ("java".equals( getId() ) )
 				return "The Java runtime environment.";
-			}
 		}
 		return description;
 	}
 
 	@Override
 	public @NotNull String getVersion() {
-		if ("java".equals(getId())) {
+		if ( "java".equals( getId() ) )
 			return System.getProperty("java.version");
-		}
 		return metadata.getVersion().getFriendlyString();
 	}
 
 	public @NotNull String getPrefixedVersion() {
 		String version = getVersion().trim();
-		if (version.startsWith("version")) {
-			version = "v" + version.substring("version".length());
-		} else if (version.startsWith("ver")) {
-			version = "v" + version.substring("ver".length());
-		} else if (!version.startsWith("v")) {
+		if ( version.startsWith("version") ) {
+			version = "v" + version.substring( "version".length() );
+		} else if ( version.startsWith("ver") ) {
+			version = "v" + version.substring( "ver".length() );
+		} else if (! version.startsWith("v") ) {
 			version = "v" + version;
 		}
 		return version.trim();
@@ -187,11 +188,11 @@ public class FabricMod implements Mod {
 	@Override
 	public @NotNull List<String> getAuthors() {
 		List<String> authors = metadata.getAuthors().stream().map(Person::getName).collect(Collectors.toList());
-		if (authors.isEmpty()) {
-			if ("minecraft".equals(getId())) {
+		if ( authors.isEmpty() ) {
+			if ( "minecraft".equals( getId() ) ) {
 				return Lists.newArrayList("Mojang Studios");
-			} else if ("java".equals(getId())) {
-				return Lists.newArrayList(System.getProperty("java.vendor"));
+			} else if ( "java".equals( getId() ) ) {
+				return Lists.newArrayList( System.getProperty("java.vendor") );
 			}
 		}
 		return authors;
@@ -199,10 +200,12 @@ public class FabricMod implements Mod {
 
 	@Override
 	public @NotNull List<String> getContributors() {
-		List<String> authors = metadata.getContributors().stream().map(Person::getName).collect(Collectors.toList());
-		if ("minecraft".equals(getId()) && authors.isEmpty()) {
+		List<String> authors = metadata.getContributors()
+				.stream()
+				.map( Person::getName )
+				.collect( Collectors.toList() );
+		if ( "minecraft".equals( getId() ) && authors.isEmpty() )
 			return Lists.newArrayList();
-		}
 		return authors;
 	}
 
@@ -213,19 +216,18 @@ public class FabricMod implements Mod {
 
 	@Override
 	public @Nullable String getWebsite() {
-		if ("minecraft".equals(getId())) {
+		if ( "minecraft".equals( getId() ) )
 			return "https://www.minecraft.net/";
-		} else if ("java".equals(getId())) {
+		else if ("java".equals(getId()))
 			return System.getProperty("java.vendor.url");
-		}
 		return metadata.getContact().get("homepage").orElse(null);
 	}
 
 	@Override
 	public @Nullable String getIssueTracker() {
-		if ("minecraft".equals(getId())) {
+		if ( "minecraft".equals( getId() ) )
 			return "https://aka.ms/snapshotbugs?ref=game";
-		}
+
 		return metadata.getContact().get("issues").orElse(null);
 	}
 
@@ -241,10 +243,10 @@ public class FabricMod implements Mod {
 
 	@Override
 	public @NotNull Set<String> getLicense() {
-		if ("minecraft".equals(getId())) {
+		if ( "minecraft".equals( getId() ) )
 			return Sets.newHashSet("Minecraft EULA");
-		}
-		return Sets.newHashSet(metadata.getLicense());
+
+		return Sets.newHashSet( metadata.getLicense() );
 	}
 
 	@Override
@@ -261,13 +263,14 @@ public class FabricMod implements Mod {
 		return modMenuData;
 	}
 
+	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 	static class ModMenuData {
 		private final Set<Badge> badges;
 		private Optional<String> parent;
-		private @Nullable
-		final DummyParentData dummyParentData;
+		@Nullable
+		private final DummyParentData dummyParentData;
 
-		public ModMenuData(Set<String> badges, Optional<String> parent, DummyParentData dummyParentData) {
+		public ModMenuData(Set<String> badges, Optional<String> parent, @Nullable DummyParentData dummyParentData) {
 			this.badges = Badge.convert(badges);
 			this.parent = parent;
 			this.dummyParentData = dummyParentData;

@@ -42,13 +42,13 @@ public class ModMenuTexturedButtonWidget extends AbstractButtonWidget {
 		int adjustedV = this.v;
 		if (! this.active )
 			adjustedV += this.height * 2;
-		else if ( this.isHovered() )
+		else if ( this.isMouseOver( client, mouseX, mouseY) )
 			adjustedV += this.height;
 
 		drawTexture( this.x, this.y, this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight );
 		GlStateManager.enableDepthTest();
 
-		if ( this.isHovered() )
+		if ( this.isMouseOver( client, mouseX, mouseY) )
 			this.renderToolTip( mouseX, mouseY );
 	}
 

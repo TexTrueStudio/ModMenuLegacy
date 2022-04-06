@@ -9,6 +9,9 @@
   "entrypoints": {
     "client": [
       "io.github.prospector.modmenu.ModMenu"
+    ],
+    "modmenu": [
+      "io.github.prospector.modmenu.ModMenuModMenuCompat"
     ]
   },
   "contact": {
@@ -16,7 +19,8 @@
     "issues": "https://github.com/Prospector/ModMenu/issues"
   },
   "authors": [
-    "Prospector"
+    "Prospector",
+    "ENDERZOMBI102"
   ],
   "contributors": [
     "Daniel She",

@@ -45,7 +45,7 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 
 	@Override
 	protected int getEntryCount() {
-		return entries.size();
+		return children().size();
 	}
 
 	@Override
@@ -64,52 +64,52 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 				}
 				if (!description.isEmpty()) {
 					for (String line : textRenderer.wrapLines( description.replaceAll("\n", "\n\n"), getRowWidth() - 5)) {
-						children().add( new DescriptionEntry( line, this ) );
+						addEntry( new DescriptionEntry( line, this ) );
 					}
 				}
 
 				Map<String, String> links = mod.getLinks();
 				String sourceLink = mod.getSource();
 				if ((!links.isEmpty() || sourceLink != null) && !ModMenuConfig.HIDE_MOD_LINKS.getValue()) {
-					children().add( new DescriptionEntry( "", this ) );
-					children().add( new DescriptionEntry( I18n.translate("modmenu.links"), this ) );
+					addEntry( new DescriptionEntry( "", this ) );
+					addEntry( new DescriptionEntry( I18n.translate("modmenu.links"), this ) );
 
 					if (sourceLink != null) {
-						children().add(new LinkEntry(new LiteralText("  ").append(new TranslatableText("modmenu.source").setStyle( new Style().setFormatting(Formatting.BLUE).setFormatting((Formatting.UNDERLINE)))).asFormattedString(), sourceLink, this));
+						addEntry(new LinkEntry(new LiteralText("  ").append(new TranslatableText("modmenu.source").setStyle( new Style().setFormatting(Formatting.BLUE).setFormatting((Formatting.UNDERLINE)))).asFormattedString(), sourceLink, this));
 					}
 
 					links.forEach((key, value) -> {
-						children().add(new LinkEntry(new LiteralText("  ").append(new TranslatableText(key).setStyle( new Style().setFormatting(Formatting.BLUE).setFormatting((Formatting.UNDERLINE)))).asFormattedString(), value, this));
+						addEntry( new LinkEntry(new LiteralText("  ").append(new TranslatableText(key).setStyle( new Style().setFormatting(Formatting.BLUE).setFormatting((Formatting.UNDERLINE)))).asFormattedString(), value, this));
 					});
 				}
 
 				Set<String> licenses = mod.getLicense();
 				if (!ModMenuConfig.HIDE_MOD_LICENSE.getValue() && !licenses.isEmpty()) {
-					children().add(new DescriptionEntry("", this));
-					children().add(new DescriptionEntry(I18n.translate("modmenu.license"), this));
+					addEntry( new DescriptionEntry("", this));
+					addEntry( new DescriptionEntry(I18n.translate("modmenu.license"), this));
 
 					for (String license : licenses) {
-						children().add(new DescriptionEntry("  " + license, this));
+						addEntry( new DescriptionEntry("  " + license, this));
 					}
 				}
 
 				if (!ModMenuConfig.HIDE_MOD_CREDITS.getValue()) {
 					if ("minecraft".equals(mod.getId())) {
-						children().add(new DescriptionEntry("", this));
-						children().add(new MojangCreditsEntry(new TranslatableText("modmenu.viewCredits").setStyle( new Style().setFormatting(Formatting.BLUE).setFormatting((Formatting.UNDERLINE))).asFormattedString(), this));
+						addEntry( new DescriptionEntry("", this));
+						addEntry( new MojangCreditsEntry(new TranslatableText("modmenu.viewCredits").setStyle( new Style().setFormatting(Formatting.BLUE).setFormatting((Formatting.UNDERLINE))).asFormattedString(), this));
 					} else if ("java".equals(mod.getId())) {
-						children().add(new DescriptionEntry( "", this));
+						addEntry( new DescriptionEntry( "", this));
 					} else {
 						List<String> authors = mod.getAuthors();
 						List<String> contributors = mod.getContributors();
 						if (!authors.isEmpty() || !contributors.isEmpty()) {
-							children().add(new DescriptionEntry( "", this));
-							children().add(new DescriptionEntry( I18n.translate("modmenu.credits"), this));
+							addEntry( new DescriptionEntry( "", this));
+							addEntry( new DescriptionEntry( I18n.translate("modmenu.credits"), this));
 							for (String author : authors) {
-								children().add(new DescriptionEntry("  " + author, this));
+								addEntry( new DescriptionEntry("  " + author, this));
 							}
 							for (String contributor : contributors) {
-								children().add(new DescriptionEntry("  " + contributor, this));
+								addEntry( new DescriptionEntry("  " + contributor, this));
 							}
 						}
 					}
@@ -127,7 +127,7 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 
 	@Override
 	public DescriptionEntry getEntry(int index) {
-		return entries.get(index);
+		return children().get(index);
 	}
 
 	protected static class DescriptionEntry extends BetterEntryListWidget.Entry<DescriptionEntry> {

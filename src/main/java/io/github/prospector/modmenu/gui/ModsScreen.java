@@ -15,6 +15,7 @@ import io.github.prospector.modmenu.util.mod.ModBadgeRenderer;
 import io.github.prospector.modmenu.util.mod.UrlUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -68,16 +69,11 @@ public class ModsScreen extends AbstractScreen {
 		this.previousScreen = previousScreen;
 	}
 
-//	@Override
-//	public boolean mouseScrolled( double mouseX, double mouseY, double amount ) {
-//		if ( modList.isMouseOver(mouseX, mouseY) ) {
-//			return this.modList.mouseScrolled(mouseX, mouseY, amount);
-//		}
-//		if ( descriptionListWidget.isMouseOver(mouseX, mouseY) ) {
-//			return this.descriptionListWidget.mouseScrolled(mouseX, mouseY, amount);
-//		}
-//		return false;
-//	}
+	@Override
+	public void handleMouse() {
+		super.handleMouse();
+		this.modList.handleMouse();
+	}
 
 	@Override
 	public void tick() {
@@ -156,15 +152,7 @@ public class ModsScreen extends AbstractScreen {
 						button.active = false;
 					}
 				},
-				( AbstractButtonWidget button, int mouseX, int mouseY ) -> {
-					if ( button.isHovered() ) {
-						this.renderTooltip(
-							CONFIGURE.asFormattedString(),
-							MinecraftClient.getInstance().mouse.x,
-							MinecraftClient.getInstance().mouse.y
-						);
-					}
-				}
+				( AbstractButtonWidget button, int mouseX, int mouseY ) -> this.setTooltip( CONFIGURE )
 		) {
 			@Override
 			public void method_891(MinecraftClient client, int mouseX, int mouseY, float tickDelta) {
@@ -213,7 +201,7 @@ public class ModsScreen extends AbstractScreen {
 			}
 		};
 		this.addChild(this.searchBox);
-		this.addDrawableChild(new ModMenuTexturedButtonWidget(
+		this.method_13411(new ModMenuTexturedButtonWidget(
 			994,
 			paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2,
 			22,
@@ -226,15 +214,7 @@ public class ModsScreen extends AbstractScreen {
 			64,
 			"",
 			button -> filterOptionsShown = !filterOptionsShown,
-			( AbstractButtonWidget button, int mouseX, int mouseY ) -> {
-				if ( button.isHovered() ) {
-					this.renderTooltip(
-						TOGGLE_FILTER_OPTIONS.asFormattedString(),
-						MinecraftClient.getInstance().mouse.x,
-						MinecraftClient.getInstance().mouse.y
-					);
-				}
-			}
+			( AbstractButtonWidget button, int mouseX, int mouseY ) -> this.setTooltip( TOGGLE_FILTER_OPTIONS )
 		) { } );
 		Text showLibrariesText = ModMenuConfig.SHOW_LIBRARIES.getButtonText();
 		Text sortingText = ModMenuConfig.SORTING.getButtonText();
@@ -243,7 +223,7 @@ public class ModsScreen extends AbstractScreen {
 		filtersWidth = showLibrariesWidth + sortingWidth + 2;
 		searchRowWidth = searchBoxX + searchBoxWidth + 22;
 		updateFiltersX();
-		this.addDrawableChild(new AbstractButtonWidget(
+		this.method_13411(new AbstractButtonWidget(
 				994,
 				filtersX,
 				45,
@@ -265,7 +245,7 @@ public class ModsScreen extends AbstractScreen {
 				super.method_891(minecraftClient, i, j, f);
 			}
 		});
-		this.addDrawableChild(new AbstractButtonWidget(
+		this.method_13411(new AbstractButtonWidget(
 				993,
 				filtersX + sortingWidth + 2,
 				45,
@@ -286,15 +266,15 @@ public class ModsScreen extends AbstractScreen {
 				super.method_891(minecraftClient, i, j, f);
 			}
 		});
-		this.addSelectableChild(this.modList);
+		this.addChild(this.modList);
 		if (!ModMenuConfig.HIDE_CONFIG_BUTTONS.getValue()) {
-			this.addDrawableChild(configureButton);
+			this.method_13411(configureButton);
 		}
-		this.addDrawableChild(websiteButton);
-		this.addDrawableChild(issuesButton);
-		this.addSelectableChild(this.descriptionListWidget);
-		this.addDrawableChild(new AbstractButtonWidget( 992, this.width / 2 - 154, this.height - 28, 150, 20, new TranslatableText("modmenu.modsFolder"), button -> UrlUtil.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods")) ) { } );
-		this.addDrawableChild(new AbstractButtonWidget( 993, this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, button -> client.openScreen(previousScreen) ) { } );
+		this.method_13411(websiteButton);
+		this.method_13411(issuesButton);
+		this.addChild(this.descriptionListWidget);
+		this.method_13411(new AbstractButtonWidget( 992, this.width / 2 - 154, this.height - 28, 150, 20, new TranslatableText("modmenu.modsFolder"), button -> UrlUtil.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods")) ) { } );
+		this.method_13411(new AbstractButtonWidget( 993, this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, button -> client.openScreen(previousScreen) ) { } );
 
 		init = true;
 	}
@@ -305,8 +285,15 @@ public class ModsScreen extends AbstractScreen {
 	}
 
 	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int button) {
+		super.mouseClicked(mouseX, mouseY, button);
+		this.modList.mouseClicked( mouseX, mouseY, button );
+		this.searchBox.method_920( mouseX, mouseY, button );
+	}
+
+	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-		this.renderBackground();
+//		this.renderBackground();
 		this.tooltip = null;
 		ModListEntry selectedEntry = selected;
 		if (selectedEntry != null) {
@@ -315,9 +302,9 @@ public class ModsScreen extends AbstractScreen {
 		this.modList.render( mouseX, mouseY, delta );
 		this.searchBox.render();
 		GlStateManager.disableBlend();
-		drawCenteredString( this.textRenderer, "Mod Menu", this.modList.getWidth() / 2, 8, 16777215 );
-		drawCenteredString( this.textRenderer, I18n.translate("modmenu.dropInfo.line1"), this.width - this.modList.getWidth() / 2, paneY / 2 - client.textRenderer.fontHeight - 1, 16777215 );
-		drawCenteredString( this.textRenderer, I18n.translate("modmenu.dropInfo.line2"), this.width - this.modList.getWidth() / 2, paneY / 2 + 1, 16777215 );
+		drawCenteredString( this.textRenderer, I18n.translate("modmenu.title"), this.modList.getWidth() / 2, 8, 16777215 );
+		drawCenteredString( this.textRenderer, I18n.translate("modmenu.dropInfo.line1"), this.width - this.modList.getWidth() / 2, paneY / 2 - client.textRenderer.fontHeight - 1, 11184810 );
+		drawCenteredString( this.textRenderer, I18n.translate("modmenu.dropInfo.line2"), this.width - this.modList.getWidth() / 2, paneY / 2 + 1, 11184810 );
 		Text fullModCount = computeModCountText(true);
 		if (updateFiltersX()) {
 			if (filterOptionsShown) {
@@ -339,7 +326,7 @@ public class ModsScreen extends AbstractScreen {
 		if (selectedEntry != null) {
 			Mod mod = selectedEntry.getMod();
 			int x = rightPaneX;
-			if ("java".equals(mod.getId())) {
+			if ( "java".equals( mod.getId() ) ) {
 				DrawingUtil.drawRandomVersionBackground(mod, x, paneY, 32, 32);
 			}
 			this.selected.bindIconTexture();
@@ -358,7 +345,7 @@ public class ModsScreen extends AbstractScreen {
 			}
 			textRenderer.draw( trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF);
 			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getStringWidth(trimmedName)) {
-				setTooltip(new TranslatableText("modmenu.modIdToolTip", mod.getId()));
+				setTooltip( new TranslatableText( "modmenu.modIdToolTip", mod.getId() ) );
 			}
 			if (init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
 				modBadgeRenderer = new ModBadgeRenderer(x + imageOffset + this.client.textRenderer.getStringWidth(trimmedName) + 2, paneY, width - 28, selectedEntry.getMod(), this);
@@ -367,7 +354,7 @@ public class ModsScreen extends AbstractScreen {
 			if (!ModMenuConfig.HIDE_BADGES.getValue()) {
 				modBadgeRenderer.draw(mouseX, mouseY);
 			}
-			if (mod.isReal()) {
+			if ( mod.isReal() ) {
 				textRenderer.draw(mod.getPrefixedVersion(), x + imageOffset, paneY + 2 + lineSpacing, 0x808080);
 			}
 			String authors;
@@ -379,11 +366,18 @@ public class ModsScreen extends AbstractScreen {
 				} else {
 					authors = names.get(0);
 				}
-				DrawingUtil.drawWrappedString(I18n.translate("modmenu.authorPrefix", authors), x + imageOffset, paneY + 2 + lineSpacing * 2, paneWidth - imageOffset - 4, 1, 0x808080);
+				DrawingUtil.drawWrappedString(
+					I18n.translate("modmenu.authorPrefix", authors ),
+					x + imageOffset,
+					paneY + 2 + lineSpacing * 2,
+					paneWidth - imageOffset - 4,
+					1,
+					0x808080
+				);
 			}
 		}
 		super.render(mouseX, mouseY, delta);
-		if (this.tooltip != null) {
+		if ( this.tooltip != null ) {
 			this.renderTooltip(
 				textRenderer.wrapLines(this.tooltip.asFormattedString(), Integer.MAX_VALUE),
 				mouseX,
@@ -422,9 +416,9 @@ public class ModsScreen extends AbstractScreen {
 
 	@Override
 	public void renderBackground() {
-		ModsScreen.overlayBackground(0, 0, this.width, this.height, 64, 64, 64, 255, 255);
-//		MinecraftClient.getInstance().getTextureManager().bindTexture( DrawableHelper.OPTIONS_BACKGROUND_TEXTURE );
-//		drawTexture( 0, 0, 0, 0, this.width, this.height );
+//		ModsScreen.overlayBackground(0, 0, this.width, this.height, 64, 64, 64, 255, 255);
+		MinecraftClient.getInstance().getTextureManager().bindTexture( DrawableHelper.OPTIONS_BACKGROUND_TEXTURE );
+		drawTexture( 0, 0, 0, 0, this.width, this.height );
 	}
 
 	public static void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {

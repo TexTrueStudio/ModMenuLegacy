@@ -45,7 +45,8 @@ public abstract class AbstractButtonWidget extends ButtonWidget {
 		return this.height;
 	}
 
-	public void onClick() {
+	@Override
+	public void mouseReleased(int mouseX, int mouseY) {
 		this.onPress.onPress( this );
 	}
 

@@ -1,5 +1,6 @@
 package io.github.prospector.modmenu.util.mod;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import org.apache.commons.lang3.Validate;
@@ -22,20 +23,30 @@ public class ModIconHandler {
 
 	public NativeImageBackedTexture createIcon(ModContainer iconSource, String iconPath) {
 		try {
-			Path path = iconSource.getPath(iconPath);
-			NativeImageBackedTexture cachedIcon = getCachedModIcon(path);
+			Path foundPath = null;
+			for ( Path path : iconSource.getRootPaths() ) {
+				if ( path.resolve( iconPath ).toFile().exists() ) {
+					foundPath = path.resolve( iconPath );
+					break;
+				}
+			}
+
+			if ( foundPath == null )
+				throw new RuntimeException("Path not found!");
+
+			NativeImageBackedTexture cachedIcon = getCachedModIcon(foundPath);
+			if ( cachedIcon != null ) {
+				return cachedIcon;
+			}
+			cachedIcon = getCachedModIcon(foundPath);
 			if (cachedIcon != null) {
 				return cachedIcon;
 			}
-			cachedIcon = getCachedModIcon(path);
-			if (cachedIcon != null) {
-				return cachedIcon;
-			}
-			try (InputStream inputStream = Files.newInputStream(path)) {
+			try (InputStream inputStream = Files.newInputStream(foundPath)) {
 				BufferedImage image = ImageIO.read( Objects.requireNonNull(inputStream) );
 				Validate.validState(image.getHeight() == image.getWidth(), "Must be square icon");
 				NativeImageBackedTexture tex = new NativeImageBackedTexture(image);
-				cacheModIcon(path, tex);
+				cacheModIcon(foundPath, tex);
 				return tex;
 			}
 
