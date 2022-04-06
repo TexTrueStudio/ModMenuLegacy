@@ -11,7 +11,6 @@ import io.github.prospector.modmenu.api.ModMenuApi;
 import io.github.prospector.modmenu.config.ModMenuConfig;
 import io.github.prospector.modmenu.config.ModMenuConfigManager;
 import io.github.prospector.modmenu.event.ModMenuEventHandler;
-import io.github.prospector.modmenu.util.HardcodedUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -24,6 +23,7 @@ import net.minecraft.text.TranslatableText;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import io.github.prospector.modmenu.util.mod.fabric.FabricMod;
+import io.github.prospector.modmenu.util.mod.fabric.FabricDummyParentMod;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -79,11 +79,10 @@ public class ModMenu implements ClientModInitializer {
 		});
 		configScreenFactories = ImmutableMap.copyOf(factories);
 
-		HardcodedUtil.initializeHardcodings();
 		// fill mods map
 		for ( ModContainer modContainer : FabricLoader.getInstance().getAllMods() ) {
 			if (! ModMenuConfig.HIDDEN_MODS.getValue().contains( modContainer.getMetadata().getId() ) ) {
-				Mod mod = new FabricMod();
+				Mod mod = new FabricMod( modContainer );
 				MODS.put( mod.getId(), mod );
 			}
 		}
@@ -95,7 +94,7 @@ public class ModMenu implements ClientModInitializer {
 				Mod parent = MODS.getOrDefault( parentId, dummyParents.get( parentId ) );
 				if ( parent != null ) {
 					if ( mod instanceof FabricMod ) {
-						parent = new FabricDummyParentMod();
+						parent = new FabricDummyParentMod( (FabricMod) mod, parentId );
 						dummyParents.put( parentId, parent );
 					}
 				}

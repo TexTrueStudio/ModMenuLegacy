@@ -1,21 +1,33 @@
 package io.github.prospector.modmenu.gui.widget;
 
-import io.github.prospector.modmenu.gui.ModListScreen;
+import com.google.common.util.concurrent.Runnables;
+import io.github.prospector.modmenu.api.Mod;
+import io.github.prospector.modmenu.config.ModMenuConfig;
+import io.github.prospector.modmenu.gui.ModsScreen;
 import io.github.prospector.modmenu.gui.widget.entries.ModListEntry;
-import io.github.prospector.modmenu.util.HardcodedUtil;
+import io.github.prospector.modmenu.util.mod.UrlUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
+import net.minecraft.client.gui.screen.CreditsScreen;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class DescriptionListWidget extends BetterEntryListWidget<DescriptionListWidget.DescriptionEntry> {
-	private final ModListScreen parent;
+	private final ModsScreen parent;
 	private final TextRenderer textRenderer;
 	private ModListEntry lastSelected = null;
 	private final List<DescriptionEntry> entries = new LinkedList<>();
 
-	public DescriptionListWidget(MinecraftClient client, int width, int height, int top, int bottom, int entryHeight, ModListScreen parent) {
+	public DescriptionListWidget(MinecraftClient client, int width, int height, int top, int bottom, int entryHeight, ModsScreen parent) {
 		super(client, width, height, top, bottom, entryHeight);
 		this.parent = parent;
 		this.textRenderer = client.textRenderer;
@@ -39,18 +51,68 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
 		ModListEntry selectedEntry = parent.getSelectedEntry();
-		if (selectedEntry != lastSelected) {
+		if ( selectedEntry != lastSelected ) {
 			lastSelected = selectedEntry;
-			entries.clear();
+			clearEntries();
 			scrollAmount = -Float.MAX_VALUE;
-			String description = lastSelected.getMod().getDescription();
-			String id = lastSelected.getMod().getId();
-			if (description.isEmpty() && HardcodedUtil.getHardcodedDescriptions().containsKey(id)) {
-				description = HardcodedUtil.getHardcodedDescription(id);
-			}
-			if (lastSelected != null && description != null && !description.isEmpty()) {
-				for (String line : textRenderer.wrapLines(description.replaceAll("\n", "\n\n"), getRowWidth())) {
-					entries.add(new DescriptionEntry(line));
+			if (lastSelected != null) {
+				Mod mod = lastSelected.getMod();
+				String description = mod.getDescription();
+				String translatableDescriptionKey = "modmenu.descriptionTranslation." + mod.getId();
+				if (I18n.method_12500(translatableDescriptionKey)) {
+					description = I18n.translate(translatableDescriptionKey);
+				}
+				if (!description.isEmpty()) {
+					for (String line : textRenderer.wrapLines( description.replaceAll("\n", "\n\n"), getRowWidth() - 5)) {
+						children().add( new DescriptionEntry( line, this ) );
+					}
+				}
+
+				Map<String, String> links = mod.getLinks();
+				String sourceLink = mod.getSource();
+				if ((!links.isEmpty() || sourceLink != null) && !ModMenuConfig.HIDE_MOD_LINKS.getValue()) {
+					children().add( new DescriptionEntry( "", this ) );
+					children().add( new DescriptionEntry( I18n.translate("modmenu.links"), this ) );
+
+					if (sourceLink != null) {
+						children().add(new LinkEntry(new LiteralText("  ").append(new TranslatableText("modmenu.source").setStyle( new Style().setFormatting(Formatting.BLUE).setFormatting((Formatting.UNDERLINE)))).asFormattedString(), sourceLink, this));
+					}
+
+					links.forEach((key, value) -> {
+						children().add(new LinkEntry(new LiteralText("  ").append(new TranslatableText(key).setStyle( new Style().setFormatting(Formatting.BLUE).setFormatting((Formatting.UNDERLINE)))).asFormattedString(), value, this));
+					});
+				}
+
+				Set<String> licenses = mod.getLicense();
+				if (!ModMenuConfig.HIDE_MOD_LICENSE.getValue() && !licenses.isEmpty()) {
+					children().add(new DescriptionEntry("", this));
+					children().add(new DescriptionEntry(I18n.translate("modmenu.license"), this));
+
+					for (String license : licenses) {
+						children().add(new DescriptionEntry("  " + license, this));
+					}
+				}
+
+				if (!ModMenuConfig.HIDE_MOD_CREDITS.getValue()) {
+					if ("minecraft".equals(mod.getId())) {
+						children().add(new DescriptionEntry("", this));
+						children().add(new MojangCreditsEntry(new TranslatableText("modmenu.viewCredits").setStyle( new Style().setFormatting(Formatting.BLUE).setFormatting((Formatting.UNDERLINE))).asFormattedString(), this));
+					} else if ("java".equals(mod.getId())) {
+						children().add(new DescriptionEntry( "", this));
+					} else {
+						List<String> authors = mod.getAuthors();
+						List<String> contributors = mod.getContributors();
+						if (!authors.isEmpty() || !contributors.isEmpty()) {
+							children().add(new DescriptionEntry( "", this));
+							children().add(new DescriptionEntry( I18n.translate("modmenu.credits"), this));
+							for (String author : authors) {
+								children().add(new DescriptionEntry("  " + author, this));
+							}
+							for (String contributor : contributors) {
+								children().add(new DescriptionEntry("  " + contributor, this));
+							}
+						}
+					}
 				}
 			}
 		}
@@ -60,7 +122,7 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 	@Override
 	protected void renderHoleBackground(int y1, int y2, int startAlpha, int endAlpha) {
 		// Awful hack but it makes the background "seamless"
-		ModListScreen.overlayBackground(xStart, y1, xEnd, y2, 64, 64, 64, startAlpha, endAlpha);
+		ModsScreen.overlayBackground(xStart, y1, xEnd, y2, 64, 64, 64, startAlpha, endAlpha);
 	}
 
 	@Override
@@ -71,7 +133,8 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 	protected static class DescriptionEntry extends BetterEntryListWidget.Entry<DescriptionEntry> {
 		protected String text;
 
-		public DescriptionEntry(String text) {
+		public DescriptionEntry(String text, DescriptionListWidget parent) {
+			this.parentList = parent;
 			this.text = text;
 		}
 
@@ -99,4 +162,50 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 		public void method_9473(int index, int x, int y, float tickDelta) { }
 	}
 
+	protected class LinkEntry extends DescriptionEntry {
+		private final String link;
+
+		public LinkEntry(String text, String link, DescriptionListWidget widget) {
+			super(text, widget);
+			this.link = link;
+		}
+
+		@Override
+		public boolean mouseClicked(int index, int mouseX, int mouseY, int button, int x, int y) {
+			if (isMouseOver(mouseX, mouseY)) {
+				client.openScreen(new ConfirmChatLinkScreen(
+					(open, c) -> {
+						if ( open )
+							UrlUtil.getOperatingSystem().open(link);
+						client.openScreen(parent);
+					},
+					link,
+					9999,
+					false
+				));
+			}
+			return super.mouseClicked( index, mouseX, mouseY, button, x, y );
+		}
+	}
+
+	protected class MojangCreditsEntry extends DescriptionEntry {
+		public MojangCreditsEntry(String text, DescriptionListWidget widget) {
+			super(text, widget);
+		}
+
+		@Override
+		public boolean mouseClicked( int index, int mouseX, int mouseY, int button, int x, int y ) {
+			if (isMouseOver(mouseX, mouseY)) {
+				client.openScreen(new MinecraftCredits(false));
+			}
+			return super.mouseClicked(index, mouseX, mouseY, button, x, y);
+		}
+
+		class MinecraftCredits extends CreditsScreen {
+			@SuppressWarnings("UnstableApiUsage")
+			public MinecraftCredits(boolean endCredits) {
+				super( endCredits, Runnables.doNothing() );
+			}
+		}
+	}
 }

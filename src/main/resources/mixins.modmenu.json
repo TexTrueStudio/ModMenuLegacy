@@ -3,13 +3,14 @@
   "package": "io.github.prospector.modmenu.mixin",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "MixinGameMenuScreen",
     "MixinTitleScreen"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
+    "ButtonWidgetMixin",
+    "ScreenMixin",
     "TextRendererAccessor"
   ]
 }

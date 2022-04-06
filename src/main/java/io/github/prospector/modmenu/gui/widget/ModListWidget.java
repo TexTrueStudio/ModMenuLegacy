@@ -186,7 +186,7 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> implement
 	public final ModListEntry getEntryAtPos(double x, double y) {
 		int int_5 = MathHelper.floor(y - (double) this.yStart) - this.headerHeight + (int) this.getScrollAmount() - 4;
 		int index = int_5 / this.entryHeight;
-		return x < (double) this.getScrollbarPosition() && x >= (double) getRowLeft() && x <= (double) (getRowLeft() + getRowWidth()) && index >= 0 && int_5 >= 0 && index < this.getEntryCount() ? entries.get(index) : null;
+		return x < (double) this.getScrollbarPosition() && x >= (double) getRowLeft() && x <= (double) (getRowLeft() + getRowWidth()) && index >= 0 && int_5 >= 0 && index < this.getEntryCount() ? children().get(index) : null;
 	}
 
 	@Override
@@ -230,6 +230,16 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> implement
 		for (NativeImageBackedTexture tex : this.modIconsCache.values()) {
 			tex.clearGlId();
 		}
+	}
+
+	public int getDisplayedCountFor(Set<String> set) {
+		int count = 0;
+		for (ModListEntry c : children()) {
+			if (set.contains(c.getMod().getId())) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 	NativeImageBackedTexture getCachedModIcon(Path path) {

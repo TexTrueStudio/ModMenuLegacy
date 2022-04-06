@@ -1,6 +1,5 @@
 package io.github.prospector.modmenu.util.mod;
 
-import net.minecraft.util.Util;
 import org.apache.commons.compress.utils.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;

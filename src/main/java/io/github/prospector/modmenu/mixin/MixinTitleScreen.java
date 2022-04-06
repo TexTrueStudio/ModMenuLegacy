@@ -1,37 +1,51 @@
 package io.github.prospector.modmenu.mixin;
 
 import io.github.prospector.modmenu.ModMenu;
-import io.github.prospector.modmenu.gui.widget.ModMenuButtonWidget;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
+import io.github.prospector.modmenu.config.ModMenuConfig;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(TitleScreen.class)
 public class MixinTitleScreen extends Screen {
-	@Inject(at = @At("RETURN"), method = "init")
-	public void drawMenuButton(CallbackInfo info) {
-		buttons.add(new ModMenuButtonWidget(123123, this.width / 2 - 100, this.height / 4 + 48 + 24 * 3, I18n.translate("modmenu.title") + " " + I18n.translate("modmenu.loaded", ModMenu.getFormattedModCount()), this));
-		for (ButtonWidget button : buttons) {
-			if (button.y <= this.height / 4 + 48 + 24 * 3) {
-				button.y -= 12;
-			}
-			if (button.y > this.height / 4 + 48 + 24 * 3) {
-				button.y += 12;
-			}
+	@ModifyArg(
+		method = "init",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/gui/screen/Screen;setScreenBounds(II)V"
+		),
+		index = 1
+	)
+	private int adjustRealmsHeight(int height) {
+		if (ModMenuConfig.MODIFY_TITLE_SCREEN.getValue() && ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.CLASSIC) {
+			return height - 51;
+		} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.REPLACE_REALMS || ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
+			return -99999;
 		}
+		return height;
 	}
 
-	@Inject(at = @At("HEAD"), method = "buttonClicked", cancellable = true)
-	public void buttonPressed(ButtonWidget button, CallbackInfo ci) {
-		if (button instanceof ModMenuButtonWidget) {
-			((ModMenuButtonWidget) button).onClick();
-			ci.cancel();
+	@ModifyArg(
+		method = "render",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/gui/screen/TitleScreen;drawWithShadow(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)V",
+			ordinal = 0
+		)
+	)
+	private String onRender(String string) {
+		if (ModMenuConfig.MODIFY_TITLE_SCREEN.getValue() && ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnTitleScreen()) {
+			String count = ModMenu.getDisplayedModCount();
+			String specificKey = "modmenu.mods." + count;
+			String replacementKey = I18n.method_12500(specificKey) ? specificKey : "modmenu.mods.n";
+			if (ModMenuConfig.EASTER_EGGS.getValue() && I18n.method_12500(specificKey + ".secret")) {
+				replacementKey = specificKey + ".secret";
+			}
+			return string.replace(I18n.translate(I18n.translate("menu.modded")), I18n.translate(replacementKey, count));
 		}
+		return string;
 	}
 }

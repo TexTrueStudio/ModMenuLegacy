@@ -6,6 +6,7 @@ import io.github.prospector.modmenu.gui.ModsScreen;
 import io.github.prospector.modmenu.util.DrawingUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
@@ -33,24 +34,24 @@ public class ModBadgeRenderer {
 			//noinspection MagicConstant
 			if (Calendar.getInstance().get(0b10) == 0b11 && Calendar.getInstance().get(0b101) == 0x1) {
 				if (mod.getId().equals(new String(new byte[]{109, 111, 100, 109, 101, 110, 117}, StandardCharsets.UTF_8))) {
-					drawBadge( new LiteralText(new String(new byte[]{-30, -100, -104, 32, 86, 105, 114, 117, 115, 32, 68, 101, 116, 101, 99, 116, 101, 100}, StandardCharsets.UTF_8)).asOrderedText(), 0b10001000111111110010001000100010, 0b10001000011111110000100000001000, mouseX, mouseY );
+					drawBadge( new LiteralText(new String(new byte[]{-30, -100, -104, 32, 86, 105, 114, 117, 115, 32, 68, 101, 116, 101, 99, 116, 101, 100}, StandardCharsets.UTF_8)), 0b10001000111111110010001000100010, 0b10001000011111110000100000001000, mouseX, mouseY );
 				} else if (mod.getId().contains(new String(new byte[]{116, 97, 116, 101, 114}, StandardCharsets.UTF_8))) {
-					drawBadge( new LiteralText(new String(new byte[]{116, 97, 116, 101, 114}, StandardCharsets.UTF_8)).asOrderedText(), 0b10001000111010111011001100101011, 0b10001000100110010111000100010010, mouseX, mouseY );
+					drawBadge( new LiteralText(new String(new byte[]{116, 97, 116, 101, 114}, StandardCharsets.UTF_8)), 0b10001000111010111011001100101011, 0b10001000100110010111000100010010, mouseX, mouseY );
 				} else {
-					drawBadge( new LiteralText(new String(new byte[]{-30, -100, -108, 32, 98, 121, 32, 77, 99, 65, 102, 101, 101}, StandardCharsets.UTF_8)).asOrderedText(), 0b10001000000111011111111101001000, 0b10001000000001110110100100001110, mouseX, mouseY );
+					drawBadge( new LiteralText(new String(new byte[]{-30, -100, -108, 32, 98, 121, 32, 77, 99, 65, 102, 101, 101}, StandardCharsets.UTF_8)), 0b10001000000111011111111101001000, 0b10001000000001110110100100001110, mouseX, mouseY );
 				}
 			}
 		}
 	}
 
 	public void drawBadge( Mod.Badge badge, int mouseX, int mouseY ) {
-		this.drawBadge( badge.getText().asOrderedText(), badge.getOutlineColor(), badge.getFillColor(), mouseX, mouseY);
+		this.drawBadge( badge.getText(), badge.getOutlineColor(), badge.getFillColor(), mouseX, mouseY);
 	}
 
-	public void drawBadge( OrderedText text, int outlineColor, int fillColor, int mouseX, int mouseY ) {
-		int width = client.textRenderer.getWidth(text) + 6;
+	public void drawBadge( Text text, int outlineColor, int fillColor, int mouseX, int mouseY ) {
+		int width = client.textRenderer.getStringWidth(text.asFormattedString()) + 6;
 		if (badgeX + width < badgeMax) {
-			DrawingUtil.drawBadge( badgeX, badgeY, width, text, outlineColor, fillColor, 0xCACACA );
+			DrawingUtil.drawBadge( badgeX, badgeY, width, text.asFormattedString(), outlineColor, fillColor, 0xCACACA );
 			badgeX += width + 3;
 		}
 	}

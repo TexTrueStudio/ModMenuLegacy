@@ -3,15 +3,17 @@ package io.github.prospector.modmenu.event;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.api.ModMenuApi;
 import io.github.prospector.modmenu.config.ModMenuConfig;
-import io.github.prospector.modmenu.gui.widget.AbstractButtonWidget;
+import io.github.prospector.modmenu.gui.ModsScreen;
 import io.github.prospector.modmenu.gui.widget.ModMenuButtonWidget;
 import io.github.prospector.modmenu.gui.widget.ModMenuTexturedButtonWidget;
+import io.github.prospector.modmenu.imixin.ButtonAcessor;
+import io.github.prospector.modmenu.util.Screens;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -32,13 +34,13 @@ public class ModMenuEventHandler {
 	}
 
 	private static void afterTitleScreenInit(Screen screen) {
-		final List<AbstractButtonWidget> buttons = Screens.getButtons(screen);
+		final List<ButtonWidget> buttons = Screens.getButtons(screen);
 		if (ModMenuConfig.MODIFY_TITLE_SCREEN.getValue()) {
 			int modsButtonIndex = -1;
 			final int spacing = 24;
 			int buttonsY = screen.height / 4 + 48;
 			for (int i = 0; i < buttons.size(); i++) {
-				AbstractButtonWidget button = buttons.get(i);
+				ButtonWidget button = buttons.get(i);
 				if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.CLASSIC) {
 					if (button.visible) {
 						shiftButtons(button, modsButtonIndex == -1, spacing);
@@ -49,7 +51,7 @@ public class ModMenuEventHandler {
 				}
 				if (buttonHasText(button, "menu.online")) {
 					if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.REPLACE_REALMS) {
-						buttons.set(i, new ModMenuButtonWidget(993, button.x, button.y, button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
+						buttons.set(i, new ModMenuButtonWidget(993, button.x, button.y, button.getWidth(), ( (ButtonAcessor) button ).modmenu$getHeight(), ModMenuApi.createModsButtonText(), screen));
 					} else {
 						if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
 							button.setWidth(98);
@@ -67,21 +69,21 @@ public class ModMenuEventHandler {
 				} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
 					buttons.add(modsButtonIndex, new ModMenuButtonWidget(995, screen.width / 2 + 2, buttonsY, 98, 20, ModMenuApi.createModsButtonText(), screen));
 				} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.ICON) {
-					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(996, screen.width / 2 + 104, buttonsY, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().setScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText()));
+					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(996, screen.width / 2 + 104, buttonsY, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)) ) { } );
 				}
 			}
 		}
 	}
 
 	private static void afterGameMenuScreenInit(Screen screen) {
-		final List<AbstractButtonWidget> buttons = Screens.getButtons(screen);
+		final List<ButtonWidget> buttons = Screens.getButtons(screen);
 		if (ModMenuConfig.MODIFY_GAME_MENU.getValue()) {
 			int modsButtonIndex = -1;
 			final int spacing = 24;
 			int buttonsY = screen.height / 4 + 8;
 			ModMenuConfig.ModsButtonStyle style = ModMenuConfig.MODS_BUTTON_STYLE.getValue().forGameMenu();
 			for (int i = 0; i < buttons.size(); i++) {
-				AbstractButtonWidget button = buttons.get(i);
+				ButtonWidget button = buttons.get(i);
 				if (style == ModMenuConfig.ModsButtonStyle.CLASSIC) {
 					if (button.visible) {
 						shiftButtons(button, modsButtonIndex == -1, spacing);
@@ -93,7 +95,7 @@ public class ModMenuEventHandler {
 				if (buttonHasText(button, "menu.reportBugs")) {
 					modsButtonIndex = i + 1;
 					if (style == ModMenuConfig.ModsButtonStyle.SHRINK) {
-						buttons.set(i, new ModMenuButtonWidget( 997, button.x, button.y, button.getWidth(), button.getHeight(), ModMenuApi.createModsButtonText(), screen));
+						buttons.set(i, new ModMenuButtonWidget( 997, button.x, button.y, button.getWidth(), ( ( ButtonAcessor ) button).modmenu$getHeight(), ModMenuApi.createModsButtonText(), screen));
 					} else {
 						modsButtonIndex = i + 1;
 						if (button.visible) {
@@ -106,18 +108,18 @@ public class ModMenuEventHandler {
 				if (style == ModMenuConfig.ModsButtonStyle.CLASSIC) {
 					buttons.add(modsButtonIndex, new ModMenuButtonWidget(998, screen.width / 2 - 102, buttonsY + spacing, 204, 20, ModMenuApi.createModsButtonText(), screen));
 				} else if (style == ModMenuConfig.ModsButtonStyle.ICON) {
-					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(999, screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 + -16, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().setScreen(new ModsScreen(screen)), ModMenuApi.createModsButtonText()));
+					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(999, screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 + -16, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)) ) { } );
 				}
 			}
 		}
 	}
 
-	private static boolean buttonHasText(AbstractButtonWidget button, String translationKey) {
-		Text text = button.getMessage();
-		return text instanceof TranslatableText && ((TranslatableText) text).getKey().equals(translationKey);
+	private static boolean buttonHasText(ButtonWidget button, String translationKey) {
+		return button.message.equals(translationKey) || button.message.equals( I18n.translate(translationKey) );
 	}
 
-	private static void shiftButtons(AbstractButtonWidget button, boolean shiftUp, int spacing) {
+	@SuppressWarnings("SameParameterValue")
+	private static void shiftButtons(ButtonWidget button, boolean shiftUp, int spacing) {
 		if (shiftUp) {
 			button.y -= spacing / 2;
 		} else {

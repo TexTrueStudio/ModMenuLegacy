@@ -6,9 +6,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.util.Texts;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 
+import java.util.List;
 import java.util.Random;
 
 @Environment(EnvType.CLIENT)
@@ -30,21 +32,21 @@ public class DrawingUtil {
 		while (string != null && string.endsWith("\n")) {
 			string = string.substring(0, string.length() - 1);
 		}
-		List<StringVisitable> strings = ScreenTexts.wrapLines( new LiteralText(string), wrapWidth, new Style() );
+		List<Text> strings = Texts.wrapLines( new LiteralText(string), wrapWidth, MinecraftClient.getInstance().textRenderer, true, true );
 		for (int i = 0; i < strings.size(); i++) {
 			if (i >= lines) {
 				break;
 			}
-			StringVisitable renderable = strings.get(i);
+			Text renderable = strings.get(i);
 			if (i == lines - 1 && strings.size() > lines) {
-				renderable = StringVisitable.concat(strings.get(i), StringVisitable.plain("..."));
+				renderable = new LiteralText( strings.get(i).getString() + "..." );
 			}
 			int x1 = x;
 			if (CLIENT.textRenderer.isRightToLeft()) {
-				int width = CLIENT.textRenderer.getWidth(line);
+				int width = CLIENT.textRenderer.getStringWidth( renderable.asFormattedString() );
 				x1 += (float) (wrapWidth - width);
 			}
-			CLIENT.textRenderer.draw( line, x1, y + i * CLIENT.textRenderer.fontHeight, color);
+			CLIENT.textRenderer.draw( renderable.asFormattedString(), x1, y + i * CLIENT.textRenderer.fontHeight, color);
 		}
 	}
 
