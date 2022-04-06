@@ -1,28 +1,25 @@
-package io.github.prospector.modmenu.gui.entries;
+package io.github.prospector.modmenu.gui.widget.entries;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+import io.github.prospector.modmenu.ModMenu;
+import io.github.prospector.modmenu.api.Mod;
+import io.github.prospector.modmenu.gui.widget.ModListWidget;
+import io.github.prospector.modmenu.util.mod.ModSearch;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import io.github.prospector.modmenu.ModMenu;
-import io.github.prospector.modmenu.gui.ModListEntry;
-import io.github.prospector.modmenu.gui.ModListSearch;
-import io.github.prospector.modmenu.gui.ModListWidget;
-
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.util.Identifier;
-
-import net.fabricmc.loader.api.ModContainer;
-
 public class ParentEntry extends ModListEntry {
 	private static final Identifier PARENT_MOD_TEXTURE = new Identifier(ModMenu.MOD_ID, "textures/gui/parent_mod.png");
-	protected List<ModContainer> children;
+	protected List<Mod> children;
 	protected ModListWidget list;
 	protected boolean hoveringIcon = false;
 
-	public ParentEntry(ModContainer parent, List<ModContainer> children, ModListWidget list) {
+	public ParentEntry( Mod parent, List<Mod> children, ModListWidget list ) {
 		super(parent, list);
 		this.children = children;
 		this.list = list;
@@ -35,11 +32,12 @@ public class ParentEntry extends ModListEntry {
 		TextRenderer font = client.textRenderer;
 		int childrenBadgeHeight = font.fontHeight;
 		int childrenBadgeWidth = font.fontHeight;
-		int children = ModListSearch.search(list.getParent().getSearchInput(), getChildren()).size();
-		int childrenWidth = font.getStringWidth(Integer.toString(children)) - 1;
-		if (childrenBadgeWidth < childrenWidth + 4) {
+		int children = ModSearch.search( list.getParent(), list.getParent().getSearchInput(), getChildren() ).size();
+		int childrenWidth = font.getStringWidth( Integer.toString(children) ) - 1;
+
+		if (childrenBadgeWidth < childrenWidth + 4)
 			childrenBadgeWidth = childrenWidth + 4;
-		}
+
 		int childrenBadgeX = x + 32 - childrenBadgeWidth;
 		int childrenBadgeY = y + 32 - childrenBadgeHeight;
 		int childrenOutlineColor = 0x8810d098;
@@ -54,7 +52,7 @@ public class ParentEntry extends ModListEntry {
 		if (isMouseOver(mouseX, mouseY)) {
 			DrawableHelper.fill(x, y, x + 32, y + 32, 0xA0909090);
 			this.client.getTextureManager().bindTexture(PARENT_MOD_TEXTURE);
-			int xOffset = list.getParent().showModChildren.contains(getMetadata().getId()) ? 32 : 0;
+			int xOffset = list.getParent().showModChildren.contains( getMod().getId() ) ? 32 : 0;
 			int yOffset = hoveringIcon ? 32 : 0;
 			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			DrawableHelper.drawTexture(x, y, xOffset, yOffset, 32 + xOffset, 32 + yOffset, 256, 256);
@@ -64,7 +62,7 @@ public class ParentEntry extends ModListEntry {
 	@Override
 	public boolean mouseClicked(int index, int mouseX, int mouseY, int button, int x, int y) {
 		if (hoveringIcon) {
-			String id = getMetadata().getId();
+			String id = getMod().getId();
 			if (list.getParent().showModChildren.contains(id)) {
 				list.getParent().showModChildren.remove(id);
 			} else {
@@ -75,19 +73,19 @@ public class ParentEntry extends ModListEntry {
 		return super.mouseClicked(index, mouseX, mouseY, button, x, y);
 	}
 
-	public void setChildren(List<ModContainer> children) {
+	public void setChildren(List<Mod> children) {
 		this.children = children;
 	}
 
-	public void addChildren(List<ModContainer> children) {
+	public void addChildren(List<Mod> children) {
 		this.children.addAll(children);
 	}
 
-	public void addChildren(ModContainer... children) {
+	public void addChildren(Mod... children) {
 		this.children.addAll(Arrays.asList(children));
 	}
 
-	public List<ModContainer> getChildren() {
+	public List<Mod> getChildren() {
 		return children;
 	}
 

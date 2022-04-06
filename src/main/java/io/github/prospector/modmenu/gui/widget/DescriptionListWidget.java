@@ -1,14 +1,15 @@
-package io.github.prospector.modmenu.gui;
+package io.github.prospector.modmenu.gui.widget;
+
+import io.github.prospector.modmenu.gui.ModListScreen;
+import io.github.prospector.modmenu.gui.widget.entries.ModListEntry;
+import io.github.prospector.modmenu.util.HardcodedUtil;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import io.github.prospector.modmenu.util.HardcodedUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.EntryListWidget;
-
-public class DescriptionListWidget extends EntryListWidget {
+public class DescriptionListWidget extends BetterEntryListWidget<DescriptionListWidget.DescriptionEntry> {
 	private final ModListScreen parent;
 	private final TextRenderer textRenderer;
 	private ModListEntry lastSelected = null;
@@ -42,8 +43,8 @@ public class DescriptionListWidget extends EntryListWidget {
 			lastSelected = selectedEntry;
 			entries.clear();
 			scrollAmount = -Float.MAX_VALUE;
-			String description = lastSelected.getMetadata().getDescription();
-			String id = lastSelected.getMetadata().getId();
+			String description = lastSelected.getMod().getDescription();
+			String id = lastSelected.getMod().getId();
 			if (description.isEmpty() && HardcodedUtil.getHardcodedDescriptions().containsKey(id)) {
 				description = HardcodedUtil.getHardcodedDescription(id);
 			}
@@ -63,15 +64,20 @@ public class DescriptionListWidget extends EntryListWidget {
 	}
 
 	@Override
-	public Entry getEntry(int index) {
+	public DescriptionEntry getEntry(int index) {
 		return entries.get(index);
 	}
 
-	protected static class DescriptionEntry implements EntryListWidget.Entry {
+	protected static class DescriptionEntry extends BetterEntryListWidget.Entry<DescriptionEntry> {
 		protected String text;
 
 		public DescriptionEntry(String text) {
 			this.text = text;
+		}
+
+		@Override
+		public void render(int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+			this.method_6700(index, x, y, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
 		}
 
 		// render()
@@ -82,19 +88,15 @@ public class DescriptionListWidget extends EntryListWidget {
 
 		@Override
 		public boolean mouseClicked(int index, int mouseX, int mouseY, int button, int x, int y) {
-			return false; // NO-OP
+			return false;
 		}
 
 		@Override
-		public void mouseReleased(int index, int mouseX, int mouseY, int button, int x, int y) {
-			// NO-OP
-		}
+		public void mouseReleased(int index, int mouseX, int mouseY, int button, int x, int y) { }
 
 		// updatePosition
 		@Override
-		public void method_9473(int index, int x, int y, float tickDelta) {
-			// NO-OP
-		}
+		public void method_9473(int index, int x, int y, float tickDelta) { }
 	}
 
 }

@@ -1,15 +1,14 @@
-package io.github.prospector.modmenu.gui.entries;
+package io.github.prospector.modmenu.gui.widget.entries;
 
-import io.github.prospector.modmenu.gui.ModListEntry;
-import io.github.prospector.modmenu.gui.ModListWidget;
-import net.fabricmc.loader.api.ModContainer;
+import io.github.prospector.modmenu.api.Mod;
+import io.github.prospector.modmenu.gui.widget.ModListWidget;
 import net.minecraft.client.gui.DrawableHelper;
 
 public class ChildEntry extends ModListEntry {
 	private boolean bottomChild;
 	private ParentEntry parent;
 
-	public ChildEntry(ModContainer container, ParentEntry parent, ModListWidget list, boolean bottomChild) {
+	public ChildEntry( Mod container, ParentEntry parent, ModListWidget list, boolean bottomChild ) {
 		super(container, list);
 		this.bottomChild = bottomChild;
 		this.parent = parent;

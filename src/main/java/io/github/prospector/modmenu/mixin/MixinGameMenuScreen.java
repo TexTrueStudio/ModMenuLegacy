@@ -1,7 +1,7 @@
 package io.github.prospector.modmenu.mixin;
 
 import io.github.prospector.modmenu.ModMenu;
-import io.github.prospector.modmenu.gui.ModMenuButtonWidget;
+import io.github.prospector.modmenu.gui.widget.ModMenuButtonWidget;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
