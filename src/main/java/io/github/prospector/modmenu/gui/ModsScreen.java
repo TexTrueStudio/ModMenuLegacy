@@ -241,7 +241,13 @@ public class ModsScreen extends AbstractScreen {
 			public void method_891(MinecraftClient minecraftClient, int i, int j, float f) {
 				GlStateManager.translatef(0, 0, 1);
 				visible = filterOptionsShown;
-				this.setMessage(ModMenuConfig.SORTING.getButtonText());
+				String name = I18n.translate( "option." + ModMenu.MOD_ID + "." + ModMenuConfig.SORTING.getKey() );
+				String value = I18n.translate(
+						"option." + ModMenu.MOD_ID + "." +
+						ModMenuConfig.SORTING.getKey() +
+						"." + ModMenuConfig.SORTING.getValue().toString().toLowerCase(Locale.ROOT)
+				);
+				this.setMessage( new LiteralText(name + ": " + value) );
 				super.method_891(minecraftClient, i, j, f);
 			}
 		});
@@ -262,7 +268,13 @@ public class ModsScreen extends AbstractScreen {
 			public void method_891(MinecraftClient minecraftClient, int i, int j, float f) {
 				GlStateManager.translatef(0, 0, 1);
 				visible = filterOptionsShown;
-				this.setMessage(ModMenuConfig.SHOW_LIBRARIES.getButtonText());
+				String name = I18n.translate( "option." + ModMenu.MOD_ID + "." + ModMenuConfig.SHOW_LIBRARIES.getKey() );
+				String value = I18n.translate(
+					"option." + ModMenu.MOD_ID + "." +
+					ModMenuConfig.SHOW_LIBRARIES.getKey() +
+					"." + Boolean.toString( ModMenuConfig.SHOW_LIBRARIES.getValue() ).toLowerCase(Locale.ROOT)
+				);
+				this.setMessage( new LiteralText(name + ": " + value) );
 				super.method_891(minecraftClient, i, j, f);
 			}
 		});
@@ -431,19 +443,21 @@ public class ModsScreen extends AbstractScreen {
 
 	@Override
 	public void renderBackground() {
-//		ModsScreen.overlayBackground(0, 0, this.width, this.height, 64, 64, 64, 255, 255);
-		MinecraftClient.getInstance().getTextureManager().bindTexture( DrawableHelper.OPTIONS_BACKGROUND_TEXTURE );
-		drawTexture( 0, 0, 0, 0, this.width, this.height );
+		ModsScreen.overlayBackground( 0, 0, this.width, this.height, (int) this.scrollPercent );
 	}
 
-	public static void overlayBackground(int x1, int y1, int x2, int y2, int red, int green, int blue, int startAlpha, int endAlpha) {
+	public static void overlayBackground( int x1, int y1, int x2, int y2, int scrollAmount ) {
+		GlStateManager.disableLighting();
+		GlStateManager.disableFog();
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator.getBuffer();
-		buffer.begin(4, VertexFormats.POSITION_TEXTURE_COLOR);
-		buffer.vertex(x1, y2, 0.0D).texture(x1 / 32.0F, y2 / 32.0F).color(red, green, blue, endAlpha).next();
-		buffer.vertex(x2, y2, 0.0D).texture(x2 / 32.0F, y2 / 32.0F).color(red, green, blue, endAlpha).next();
-		buffer.vertex(x2, y1, 0.0D).texture(x2 / 32.0F, y1 / 32.0F).color(red, green, blue, startAlpha).next();
-		buffer.vertex(x1, y1, 0.0D).texture(x1 / 32.0F, y1 / 32.0F).color(red, green, blue, startAlpha).next();
+		BufferBuilder bufferBuilder = tessellator.getBuffer();
+		MinecraftClient.getInstance().getTextureManager().bindTexture(DrawableHelper.OPTIONS_BACKGROUND_TEXTURE);
+		GlStateManager.color4f(0.0F, 0.0F, 0.0F, 1.0F);
+		bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
+		bufferBuilder.vertex( x1, y2, 0.0D).texture( x1 / 32.0F, (float) ( y2 + scrollAmount ) / 32.0F).color(64, 64, 64, 255).next();
+		bufferBuilder.vertex( x2, y2, 0.0D).texture( x2 / 32.0F, (float) ( y2 + scrollAmount ) / 32.0F).color(64, 64, 64, 255).next();
+		bufferBuilder.vertex( x2, y1, 0.0D).texture( x2 / 32.0F, (float) ( y1 + scrollAmount ) / 32.0F).color(64, 64, 64, 255).next();
+		bufferBuilder.vertex( x1, y1, 0.0D).texture( x1 / 32.0F, (float) ( y1 + scrollAmount ) / 32.0F).color(64, 64, 64, 255).next();
 		tessellator.draw();
 	}
 

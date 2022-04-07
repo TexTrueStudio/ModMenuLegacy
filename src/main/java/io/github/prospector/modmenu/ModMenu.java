@@ -10,7 +10,8 @@ import io.github.prospector.modmenu.api.Mod;
 import io.github.prospector.modmenu.api.ModMenuApi;
 import io.github.prospector.modmenu.config.ModMenuConfig;
 import io.github.prospector.modmenu.config.ModMenuConfigManager;
-import io.github.prospector.modmenu.event.ModMenuEventHandler;
+import io.github.prospector.modmenu.util.mod.fabric.FabricDummyParentMod;
+import io.github.prospector.modmenu.util.mod.fabric.FabricMod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -22,8 +23,6 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import io.github.prospector.modmenu.util.mod.fabric.FabricMod;
-import io.github.prospector.modmenu.util.mod.fabric.FabricDummyParentMod;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -104,7 +103,6 @@ public class ModMenu implements ClientModInitializer {
 			}
 		}
 		MODS.putAll( dummyParents );
-		ModMenuEventHandler.register();
 	}
 
 	public static void clearModCountCache() {
@@ -114,11 +112,13 @@ public class ModMenu implements ClientModInitializer {
 	public static String getDisplayedModCount() {
 		if (cachedDisplayedModCount == -1) {
 			// listen, if you have >= 2^32 mods then that's on you
-			cachedDisplayedModCount = Math.toIntExact(MODS.values().stream().filter(mod ->
-					(ModMenuConfig.COUNT_CHILDREN.getValue() || mod.getParent() == null) &&
-							(ModMenuConfig.COUNT_LIBRARIES.getValue() || !mod.getBadges().contains(Mod.Badge.LIBRARY)) &&
-							(ModMenuConfig.COUNT_HIDDEN_MODS.getValue() || !ModMenuConfig.HIDDEN_MODS.getValue().contains(mod.getId()))
-			).count());
+			cachedDisplayedModCount = Math.toIntExact(
+				MODS.values().stream().filter( mod ->
+					( ModMenuConfig.COUNT_CHILDREN.getValue() || mod.getParent() == null ) &&
+					( ModMenuConfig.COUNT_LIBRARIES.getValue() || !mod.getBadges().contains(Mod.Badge.LIBRARY) ) &&
+					( ModMenuConfig.COUNT_HIDDEN_MODS.getValue() || !ModMenuConfig.HIDDEN_MODS.getValue().contains(mod.getId()) )
+				).count()
+			);
 		}
 		return NumberFormat.getInstance().format(cachedDisplayedModCount);
 	}

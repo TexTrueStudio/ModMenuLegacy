@@ -21,11 +21,7 @@ import java.util.List;
 public class ModMenuEventHandler {
 	private static final Identifier FABRIC_ICON_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/mods_button.png");
 
-	public static void register() {
-		ScreenEvents.AFTER_INIT.register(ModMenuEventHandler::afterScreenInit);
-	}
-
-	public static void afterScreenInit(MinecraftClient client, Screen screen, int scaledWidth, int scaledHeight) {
+	public static void afterScreenInit(Screen screen) {
 		if (screen instanceof TitleScreen) {
 			afterTitleScreenInit(screen);
 		} else if (screen instanceof GameMenuScreen) {
@@ -108,7 +104,7 @@ public class ModMenuEventHandler {
 				if (style == ModMenuConfig.ModsButtonStyle.CLASSIC) {
 					buttons.add(modsButtonIndex, new ModMenuButtonWidget(998, screen.width / 2 - 102, buttonsY + spacing, 204, 20, ModMenuApi.createModsButtonText(), screen));
 				} else if (style == ModMenuConfig.ModsButtonStyle.ICON) {
-					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(999, screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 + -16, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)) ) { } );
+					buttons.add(modsButtonIndex, new ModMenuTexturedButtonWidget(999, screen.width / 2 + 4 + 100 + 2, screen.height / 4 + 72 /* + */ -16, 20, 20, 0, 0, FABRIC_ICON_BUTTON_LOCATION, 32, 64, button -> MinecraftClient.getInstance().openScreen(new ModsScreen(screen)) ) { } );
 				}
 			}
 		}

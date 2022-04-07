@@ -120,7 +120,8 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 	@Override
 	protected void renderHoleBackground(int y1, int y2, int startAlpha, int endAlpha) {
 		// Awful hack but it makes the background "seamless"
-		ModsScreen.overlayBackground(xStart, y1, xEnd, y2, 64, 64, 64, startAlpha, endAlpha);
+//		ModsScreen.overlayBackground(xStart, y1, xEnd, y2, 64, 64, 64, startAlpha, endAlpha);
+		ModsScreen.overlayBackground(xStart, y1, xEnd, y2, (int) this.scrollAmount);
 	}
 
 	@Override

@@ -4,10 +4,10 @@ import com.mojang.text2speech.Narrator;
 import io.github.prospector.modmenu.ModMenu;
 import io.github.prospector.modmenu.api.Mod;
 import io.github.prospector.modmenu.config.ModMenuConfig;
-import io.github.prospector.modmenu.gui.widget.entries.ModListEntry;
 import io.github.prospector.modmenu.gui.ModsScreen;
 import io.github.prospector.modmenu.gui.widget.entries.ChildEntry;
 import io.github.prospector.modmenu.gui.widget.entries.IndependentEntry;
+import io.github.prospector.modmenu.gui.widget.entries.ModListEntry;
 import io.github.prospector.modmenu.gui.widget.entries.ParentEntry;
 import io.github.prospector.modmenu.util.mod.ModIconHandler;
 import io.github.prospector.modmenu.util.mod.ModSearch;
@@ -15,15 +15,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.MathHelper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ModListWidget extends BetterEntryListWidget<ModListEntry> implements AutoCloseable {
-	private static final Logger LOGGER = LogManager.getLogger();
 	public static final boolean DEBUG = Boolean.getBoolean("modmenu.debug");
 
 	private final Map<Path, NativeImageBackedTexture> modIconsCache = new HashMap<>();
@@ -31,7 +28,6 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> implement
 	private List<Mod> mods = null;
 	private Set<Mod> addedMods = new HashSet<>();
 	private String selectedModId = null;
-	private boolean scrolling;
 	private final ModIconHandler iconHandler = new ModIconHandler();
 
 	public ModListWidget(MinecraftClient client, int width, int height, int y1, int y2, int entryHeight, String searchTerm, ModListWidget list, ModsScreen parent) {
@@ -55,7 +51,6 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> implement
 
 	public void select(ModListEntry entry) {
 		this.setSelected(entry);
-		//noinspection ConstantConditions
 		if ( entry != null ) {
 			Mod mod = entry.getMod();
 			Narrator.getNarrator().say( new TranslatableText( "narrator.select", mod.getName() ).getString() );
@@ -105,15 +100,11 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> implement
 	}
 
 	public void reloadFilters() {
-		filter(parent.getSearchInput(), true, false);
+		filter(parent.getSearchInput(), true);
 	}
 
 
 	public void filter(String searchTerm, boolean refresh) {
-		filter(searchTerm, refresh, true);
-	}
-
-	private void filter(String searchTerm, boolean refresh, boolean search) {
 		this.clearEntries();
 		addedMods.clear();
 		Collection<Mod> mods = ModMenu.MODS.values()
@@ -184,7 +175,7 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> implement
 	}
 
 	public final ModListEntry getEntryAtPos(double x, double y) {
-		int int_5 = MathHelper.floor(y - (double) this.yStart) - this.headerHeight + (int) this.getScrollAmount() - 4;
+		int int_5 = MathHelper.floor(y - (double) this.yStart) - this.headerHeight + this.getScrollAmount() - 4;
 		int index = int_5 / this.entryHeight;
 		return x < (double) this.getScrollbarPosition() && x >= (double) getRowLeft() && x <= (double) (getRowLeft() + getRowWidth()) && index >= 0 && int_5 >= 0 && index < this.getEntryCount() ? children().get(index) : null;
 	}
