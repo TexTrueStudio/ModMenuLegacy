@@ -331,8 +331,6 @@ public class ModsScreen extends AbstractScreen {
 		this.renderButtons( mouseX, mouseY, delta );
 		GlStateManager.disableBlend();
 		drawCenteredString( this.textRenderer, I18n.translate("modmenu.title"), this.modList.getWidth() / 2, 8, 16777215 );
-		drawCenteredString( this.textRenderer, I18n.translate("modmenu.dropInfo.line1"), this.width - this.modList.getWidth() / 2, paneY / 2 - client.textRenderer.fontHeight - 1, 11184810 );
-		drawCenteredString( this.textRenderer, I18n.translate("modmenu.dropInfo.line2"), this.width - this.modList.getWidth() / 2, paneY / 2 + 1, 11184810 );
 		Text fullModCount = computeModCountText(true);
 		if (updateFiltersX()) {
 			if (filterOptionsShown) {

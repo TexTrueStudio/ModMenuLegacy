@@ -33,12 +33,6 @@ modmenu.badge.deprecated=Deprecated
 modmenu.badge.forge=Forge
 modmenu.badge.minecraft=Minecraft
 
-modmenu.dropInfo.line1=Drag and drop files into
-modmenu.dropInfo.line2=this window to add mods
-modmenu.dropConfirm=Do you want to copy the following mods into the mods directory?
-modmenu.dropSuccessful.line1=Successfully copied mods
-modmenu.dropSuccessful.line2=Restart game to load mods
-
 modmenu.modIdToolTip=Mod ID=%s
 modmenu.authorPrefix=By %s
 modmenu.config=Edit Config
