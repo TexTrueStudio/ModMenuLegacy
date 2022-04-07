@@ -151,17 +151,18 @@ public class ModsScreen extends AbstractScreen {
 						button.active = false;
 					}
 				},
-				( AbstractButtonWidget button, int mouseX, int mouseY ) -> this.setTooltip( CONFIGURE )
+				(AbstractButtonWidget button, int mouseX, int mouseY) -> this.setTooltip(CONFIGURE)
 		) {
 			@Override
 			public void method_891(MinecraftClient client, int mouseX, int mouseY, float tickDelta) {
-				if ( selected != null ) {
+				if (selected != null) {
 					String modid = selected.getMod().getId();
 					active = modHasConfigScreen.get(modid);
 				} else
 					active = false;
 				visible = active;
-				super.method_891(client, mouseX, mouseY, tickDelta);
+				if (visible)
+					super.method_891(client, mouseX, mouseY, tickDelta);
 			}
 		};
 		int urlButtonWidths = paneWidth / 2 - 2;
@@ -365,19 +366,19 @@ public class ModsScreen extends AbstractScreen {
 			String name = mod.getName();
 			String trimmedName = name;
 			int maxNameWidth = this.width - (x + imageOffset);
-			if (textRenderer.getStringWidth(name) > maxNameWidth) {
+			if ( textRenderer.getStringWidth(name) > maxNameWidth ) {
 				String ellipsis = "...";
 				trimmedName = textRenderer.trimToWidth( name, maxNameWidth - textRenderer.getStringWidth(ellipsis) ) + ellipsis;
 			}
-			textRenderer.draw( trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF);
-			if (mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getStringWidth(trimmedName)) {
+			textRenderer.draw( trimmedName, x + imageOffset, paneY + 1, 0xFFFFFF );
+			if ( mouseX > x + imageOffset && mouseY > paneY + 1 && mouseY < paneY + 1 + textRenderer.fontHeight && mouseX < x + imageOffset + textRenderer.getStringWidth(trimmedName)) {
 				setTooltip( new TranslatableText( "modmenu.modIdToolTip", mod.getId() ) );
 			}
-			if (init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod) {
+			if ( init || modBadgeRenderer == null || modBadgeRenderer.getMod() != mod ) {
 				modBadgeRenderer = new ModBadgeRenderer(x + imageOffset + this.client.textRenderer.getStringWidth(trimmedName) + 2, paneY, width - 28, selectedEntry.getMod(), this);
 				init = false;
 			}
-			if (!ModMenuConfig.HIDE_BADGES.getValue()) {
+			if (! ModMenuConfig.HIDE_BADGES.getValue() ) {
 				modBadgeRenderer.draw(mouseX, mouseY);
 			}
 			if ( mod.isReal() ) {

@@ -42,26 +42,23 @@ public class AbstractButtonWidget extends ButtonWidget {
 			client.getTextureManager().bindTexture(WIDGETS_LOCATION);
 			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-			this.hovered = mouseX >= this.x &&
-					mouseY >= this.y &&
-					mouseX < this.x + this.width &&
-					mouseY < this.y + this.height;
+			this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 
-			int k = this.getYImage(this.hovered);
+			int yOffset = this.getYImage(this.hovered);
 			GlStateManager.enableBlend();
 			GlStateManager.method_12288(GlStateManager.class_2870.field_13525, GlStateManager.class_2866.field_13480, GlStateManager.class_2870.field_13518, GlStateManager.class_2866.field_13484);
 			GlStateManager.method_12287(GlStateManager.class_2870.field_13525, GlStateManager.class_2866.field_13480);
-			this.drawTexture(this.x, this.y, 0, 46 + k * 20, this.width / 2, this.height);
-			this.drawTexture(this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + k * 20, this.width / 2, this.height);
+			this.drawTexture(this.x, this.y, 0, 46 + yOffset * 20, this.width / 2, this.height);
+			this.drawTexture(this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + yOffset * 20, this.width / 2, this.height);
 			this.renderBg(client, mouseX, mouseY);
 
-			int l = 14737632;
+			int color = 16777215;
 			if (! this.active )
-				l = 10526880;
+				color = 10526880;
 			else if ( this.isHovered() )
-				l = 16777120;
+				color = 16777120;
 
-			this.drawCenteredString(textRenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, l);
+			this.drawCenteredString(textRenderer, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, color);
 		}
 		if ( this.isHovered() )
 			this.renderToolTip( mouseX, mouseY );
@@ -108,6 +105,10 @@ public class AbstractButtonWidget extends ButtonWidget {
 
 	protected void setOnPress( PressAction action ) {
 		this.onPress = action;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 
 	@FunctionalInterface
