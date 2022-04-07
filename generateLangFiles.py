@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 
-for file in Path( '.' ).glob('*.json'):
+for file in Path( './src/resources/assets/modmenu/lang' ).glob('*.json'):
 	lang = ''
 	
 	for key, value in json.loads( file.read_text( encoding='utf-8' ) ).items():
