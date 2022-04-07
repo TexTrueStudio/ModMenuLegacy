@@ -43,11 +43,16 @@ public class ModMenuOptionsScreen extends AbstractScreen {
 	}
 
 	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int button) {
+		this.list.mouseClicked(  mouseX, mouseY, button );
+		super.mouseClicked(mouseX, mouseY, button);
+	}
+
+	@Override
 	public void render(int mouseX, int mouseY, float delta) {
 		this.renderBackground();
-		this.list.render( mouseX, mouseY, delta );
-		drawCenteredString( this.textRenderer, I18n.translate("modmenu.options"), this.width / 2, 5, 0xffffff );
 		super.render( mouseX, mouseY, delta );
+		drawCenteredString( this.textRenderer, I18n.translate("modmenu.options"), this.width / 2, 5, 0xffffff );
 		List<String> list = getHoveredButtonTooltip(this.list, mouseX, mouseY);
 		if ( list != null )
 			this.renderTooltip( list, mouseX, mouseY );

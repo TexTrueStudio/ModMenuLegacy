@@ -5,11 +5,14 @@ import io.github.prospector.modmenu.util.ScreenTexts;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 
@@ -42,7 +45,7 @@ public class CyclingButtonWidget<T> extends AbstractButtonWidget {
 			CyclingButtonWidget.TooltipFactory<T> tooltipFactory,
 			boolean optionTextOmitted
 	) {
-		super(id, x, y, width, height, message, null);
+		super(id, x, y, width, height, optionText, null);
 		this.setOnPress( this::onPress );
 		this.optionText = optionText;
 		this.index = index;
@@ -66,7 +69,7 @@ public class CyclingButtonWidget<T> extends AbstractButtonWidget {
 	private void cycle(int amount) {
 		List<T> list = this.values.getCurrent();
 		this.index = MathHelper.floorMod(this.index + amount, list.size());
-		T object = (T)list.get(this.index);
+		T object = list.get(this.index);
 		this.internalSetValue(object);
 		this.callback.onValueChange(this, object);
 	}
@@ -77,9 +80,20 @@ public class CyclingButtonWidget<T> extends AbstractButtonWidget {
 		return list.get( MathHelper.floorMod( this.index + offset, list.size() ) );
 	}
 
+	@Override
 	public void mouseScrolled( int mouseX, int mouseY, int amount ) {
 		// amount is either -1 or 1
 		this.cycle( amount );
+	}
+
+	@Override
+	public String getMessage() {
+		String name = I18n.translate( super.getMessage() );
+		String value = I18n.translate(
+				( (TranslatableText) this.optionText ).getKey() + "." +
+				this.getValue().toString().toLowerCase(Locale.ROOT)
+		);
+		return name + ": " + value;
 	}
 
 	public void setValue(T value) {
@@ -92,8 +106,6 @@ public class CyclingButtonWidget<T> extends AbstractButtonWidget {
 	}
 
 	private void internalSetValue(T value) {
-		Text text = this.composeText(value);
-		this.setMessage(text);
 		this.value = value;
 	}
 

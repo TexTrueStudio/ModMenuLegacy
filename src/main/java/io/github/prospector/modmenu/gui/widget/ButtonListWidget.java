@@ -125,6 +125,10 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 
 		@Override
 		public boolean mouseClicked(int index, int mouseX, int mouseY, int button, int x, int y) {
+			this.buttons.forEach( buttonWidget -> {
+				if ( buttonWidget.isMouseOver( MinecraftClient.getInstance(), mouseX, mouseY ) )
+					buttonWidget.mouseReleased( mouseX, mouseY );
+			} );
 			return false;
 		}
 
@@ -132,10 +136,6 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 		public void mouseReleased(int index, int mouseX, int mouseY, int button, int x, int y) { }
 
 		public List<AbstractButtonWidget> children() {
-			return this.buttons;
-		}
-
-		public List<AbstractButtonWidget> selectableChildren() {
 			return this.buttons;
 		}
 	}
