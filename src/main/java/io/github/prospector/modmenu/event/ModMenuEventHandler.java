@@ -7,7 +7,7 @@ import io.github.prospector.modmenu.gui.ModsScreen;
 import io.github.prospector.modmenu.gui.widget.ModMenuButtonWidget;
 import io.github.prospector.modmenu.gui.widget.ModMenuTexturedButtonWidget;
 import io.github.prospector.modmenu.imixin.ButtonAcessor;
-import io.github.prospector.modmenu.util.Screens;
+import io.github.prospector.modmenu.imixin.ScreenAcessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -22,15 +22,15 @@ public class ModMenuEventHandler {
 	private static final Identifier FABRIC_ICON_BUTTON_LOCATION = new Identifier(ModMenu.MOD_ID, "textures/gui/mods_button.png");
 
 	public static void afterScreenInit(Screen screen) {
-		if (screen instanceof TitleScreen) {
+		if ( screen instanceof TitleScreen ) {
 			afterTitleScreenInit(screen);
-		} else if (screen instanceof GameMenuScreen) {
+		} else if ( screen instanceof GameMenuScreen ) {
 			afterGameMenuScreenInit(screen);
 		}
 	}
 
 	private static void afterTitleScreenInit(Screen screen) {
-		final List<ButtonWidget> buttons = Screens.getButtons(screen);
+		final List<ButtonWidget> buttons = getButtons(screen);
 		if (ModMenuConfig.MODIFY_TITLE_SCREEN.getValue()) {
 			int modsButtonIndex = -1;
 			final int spacing = 24;
@@ -45,7 +45,7 @@ public class ModMenuEventHandler {
 						}
 					}
 				}
-				if (buttonHasText(button, "menu.online")) {
+				if ( buttonHasText( button, "menu.online" ) ) {
 					if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.REPLACE_REALMS) {
 						buttons.set(i, new ModMenuButtonWidget(993, button.x, button.y, button.getWidth(), ( (ButtonAcessor) button ).modmenu$getHeight(), ModMenuApi.createModsButtonText(), screen));
 					} else {
@@ -72,7 +72,7 @@ public class ModMenuEventHandler {
 	}
 
 	private static void afterGameMenuScreenInit(Screen screen) {
-		final List<ButtonWidget> buttons = Screens.getButtons(screen);
+		final List<ButtonWidget> buttons = getButtons(screen);
 		if (ModMenuConfig.MODIFY_GAME_MENU.getValue()) {
 			int modsButtonIndex = -1;
 			final int spacing = 24;
@@ -121,5 +121,9 @@ public class ModMenuEventHandler {
 		} else {
 			button.y += spacing - (spacing / 2);
 		}
+	}
+
+	private static List<ButtonWidget> getButtons( Screen screen ) {
+		return ( (ScreenAcessor) screen ).modmenu$getButtons();
 	}
 }

@@ -5,8 +5,8 @@ import io.github.prospector.modmenu.gui.widget.ModListWidget;
 import net.minecraft.client.gui.DrawableHelper;
 
 public class ChildEntry extends ModListEntry {
-	private boolean bottomChild;
-	private ParentEntry parent;
+	private final boolean bottomChild;
+	private final ParentEntry parent;
 
 	public ChildEntry( Mod container, ParentEntry parent, ModListWidget list, boolean bottomChild ) {
 		super(container, list);
@@ -27,5 +27,9 @@ public class ChildEntry extends ModListEntry {
 	@Override
 	public int getXOffset() {
 		return 13;
+	}
+
+	public ParentEntry getParent() {
+		return parent;
 	}
 }

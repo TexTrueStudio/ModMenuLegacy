@@ -6,7 +6,6 @@ import io.github.prospector.modmenu.config.option.Option;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.options.GameOptions;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,10 +17,6 @@ import java.util.Optional;
 public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.ButtonEntry> {
 	public ButtonListWidget( MinecraftClient minecraftClient, int width, int height, int top, int bottom, int itemHeight ) {
 		super( minecraftClient, width, height, top, bottom, itemHeight );
-	}
-
-	public int addSingleOptionEntry( Option option, int id ) {
-		return this.addEntry( ButtonListWidget.ButtonEntry.create( this.client.options, id, this.width, option ) );
 	}
 
 	public void addOptionEntry(Option firstOption, @Nullable Option secondOption, int id ) {
@@ -45,21 +40,6 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 
 	public int getRowWidth() {
 		return 400;
-	}
-
-	protected int getScrollbarPositionX() {
-		return super.getScrollbarPosition() + 32;
-	}
-
-	@Nullable
-	public ButtonWidget getButtonFor(Option option) {
-		for ( ButtonListWidget.ButtonEntry buttonEntry : this.children() ) {
-			ButtonWidget clickableWidget = buttonEntry.optionsToButtons.get(option);
-			if ( clickableWidget != null )
-				return clickableWidget;
-		}
-
-		return null;
 	}
 
 	public Optional<AbstractButtonWidget> getHoveredButton( double mouseX, double mouseY ) {
@@ -86,12 +66,6 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 		private ButtonEntry(Map<Option, AbstractButtonWidget> optionsToButtons) {
 			this.optionsToButtons = optionsToButtons;
 			this.buttons = ImmutableList.copyOf(optionsToButtons.values());
-		}
-
-		public static ButtonListWidget.ButtonEntry create(GameOptions options, int id, int width, Option option) {
-			return new ButtonListWidget.ButtonEntry( ImmutableMap.of(
-				option, option.createButton( options, id, width / 2 - 155, 0, 310 )
-			) );
 		}
 
 		public static ButtonListWidget.ButtonEntry create(GameOptions options, int id, int width, Option firstOption, @Nullable Option secondOption) {
@@ -134,10 +108,6 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 
 		@Override
 		public void mouseReleased(int index, int mouseX, int mouseY, int button, int x, int y) { }
-
-		public List<AbstractButtonWidget> children() {
-			return this.buttons;
-		}
 	}
 }
 
