@@ -40,8 +40,8 @@ public class ModMenu implements ClientModInitializer {
 	public static final Map<String, Mod> ROOT_MODS = new HashMap<>();
 	public static final LinkedListMultimap<Mod, Mod> PARENT_MAP = LinkedListMultimap.create();
 
+	private static final List< Supplier< Map< String, ConfigScreenFactory<?> > > > dynamicScreenFactories = new ArrayList<>();
 	private static ImmutableMap< String, ConfigScreenFactory<?> > configScreenFactories = ImmutableMap.of();
-	private static List< Supplier< Map< String, ConfigScreenFactory<?> > > > dynamicScreenFactories = new ArrayList<>();
 
 	private static int cachedDisplayedModCount = -1;
 
