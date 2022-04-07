@@ -3,14 +3,15 @@ package io.github.prospector.modmenu.gui.widget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
+import org.lwjgl.input.Mouse;
 
 import java.util.function.Consumer;
 
-public abstract class AbstractButtonWidget extends ButtonWidget {
+public class AbstractButtonWidget extends ButtonWidget {
 	public static final TooltipSupplier EMPTY = ( button, mouseX, mouseY ) -> { };
 
-	private final PressAction onPress;
 	private final TooltipSupplier tooltipSupplier;
+	private PressAction onPress;
 	private Text text;
 
 	public AbstractButtonWidget(int id, int x, int y, int width, int height, Text text, PressAction onPress ) {
@@ -47,7 +48,20 @@ public abstract class AbstractButtonWidget extends ButtonWidget {
 
 	@Override
 	public void mouseReleased(int mouseX, int mouseY) {
-		this.onPress.onPress( this );
+		if ( this.onPress != null )
+			this.onPress.onPress( this );
+	}
+
+	public void mouseScrolled(int mouseX, int mouseY, int amount ) { }
+
+	public void handleMouse() {
+		if ( this.isMouseOver( MinecraftClient.getInstance(), this.x, this.y ) ) {
+			// scrolling
+			int scroll = Mouse.getEventDWheel();
+			if ( scroll != 0 ) {
+				this.mouseScrolled( Mouse.getX(), Mouse.getY(), scroll > 0 ? -1 : 1 );
+			}
+		}
 	}
 
 	public Text getMessage() {
@@ -56,6 +70,10 @@ public abstract class AbstractButtonWidget extends ButtonWidget {
 
 	public void setMessage( Text text ) {
 		this.text = text;
+	}
+
+	protected void setOnPress( PressAction action ) {
+		this.onPress = action;
 	}
 
 	@FunctionalInterface

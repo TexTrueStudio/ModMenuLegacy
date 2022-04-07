@@ -16,7 +16,6 @@ import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,7 +24,6 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 	private final ModsScreen parent;
 	private final TextRenderer textRenderer;
 	private ModListEntry lastSelected = null;
-	private final List<DescriptionEntry> entries = new LinkedList<>();
 
 	public DescriptionListWidget(MinecraftClient client, int width, int height, int top, int bottom, int entryHeight, ModsScreen parent) {
 		super(client, width, height, top, bottom, entryHeight);

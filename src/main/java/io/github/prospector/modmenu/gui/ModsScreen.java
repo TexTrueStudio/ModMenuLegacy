@@ -20,8 +20,9 @@ import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.PagedEntryListWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -44,9 +45,8 @@ public class ModsScreen extends AbstractScreen {
 
 	private static final Logger LOGGER = LogManager.getLogger("Mod Menu");
 
-	private TextFieldWidget searchBox;
+	private BetterTextFieldWidget searchBox;
 	private DescriptionListWidget descriptionListWidget;
-	private final Screen previousScreen;
 	private ModListWidget modList;
 	private Text tooltip;
 	private ModListEntry selected;
@@ -66,7 +66,7 @@ public class ModsScreen extends AbstractScreen {
 	public final Map<String, Boolean> modHasConfigScreen = new HashMap<>();
 
 	public ModsScreen(Screen previousScreen) {
-		this.previousScreen = previousScreen;
+		super(previousScreen);
 	}
 
 	@Override
@@ -82,14 +82,13 @@ public class ModsScreen extends AbstractScreen {
 
 	@Override
 	public void init() {
-//		this.client.keyboard.setRepeatEvents(true);
 		paneY = 48;
 		paneWidth = this.width / 2 - 8;
 		rightPaneX = width - paneWidth;
 
 		int searchBoxWidth = paneWidth - 32 - 22;
 		searchBoxX = paneWidth / 2 - searchBoxWidth / 2 - 22 / 2;
-		this.searchBox = new TextFieldWidget( 998, this.textRenderer, searchBoxX, 22, searchBoxWidth, 20 );
+		this.searchBox = new BetterTextFieldWidget( 998, this.textRenderer, searchBoxX, 22, searchBoxWidth, 20 );
 		this.searchBox.setListener( new PagedEntryListWidget.Listener() {
 			@Override
 			public void setBooleanValue(int id, boolean value) { }
@@ -200,6 +199,7 @@ public class ModsScreen extends AbstractScreen {
 				super.method_891(client, mouseX, mouseY, tickDelta);
 			}
 		};
+		this.addChild(this.modList);
 		this.addChild(this.searchBox);
 		this.method_13411(new ModMenuTexturedButtonWidget(
 			994,
@@ -215,7 +215,7 @@ public class ModsScreen extends AbstractScreen {
 			"",
 			button -> filterOptionsShown = !filterOptionsShown,
 			( AbstractButtonWidget button, int mouseX, int mouseY ) -> this.setTooltip( TOGGLE_FILTER_OPTIONS )
-		) { } );
+		));
 		Text showLibrariesText = ModMenuConfig.SHOW_LIBRARIES.getButtonText();
 		Text sortingText = ModMenuConfig.SORTING.getButtonText();
 		int showLibrariesWidth = textRenderer.getStringWidth(showLibrariesText.asFormattedString()) + 20;
@@ -266,15 +266,30 @@ public class ModsScreen extends AbstractScreen {
 				super.method_891(minecraftClient, i, j, f);
 			}
 		});
-		this.addChild(this.modList);
 		if (!ModMenuConfig.HIDE_CONFIG_BUTTONS.getValue()) {
 			this.method_13411(configureButton);
 		}
 		this.method_13411(websiteButton);
 		this.method_13411(issuesButton);
 		this.addChild(this.descriptionListWidget);
-		this.method_13411(new AbstractButtonWidget( 992, this.width / 2 - 154, this.height - 28, 150, 20, new TranslatableText("modmenu.modsFolder"), button -> UrlUtil.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods")) ) { } );
-		this.method_13411(new AbstractButtonWidget( 993, this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, button -> client.openScreen(previousScreen) ) { } );
+		this.method_13411(new AbstractButtonWidget(
+				992,
+				this.width / 2 - 154,
+				this.height - 28,
+				150,
+				20,
+				new TranslatableText("modmenu.modsFolder"),
+				button -> UrlUtil.getOperatingSystem().open(new File(FabricLoader.getInstance().getGameDir().toFile(), "mods"))
+		));
+		this.method_13411(new AbstractButtonWidget(
+				993,
+				this.width / 2 + 4,
+				this.height - 28,
+				150,
+				20,
+				ScreenTexts.DONE,
+				button -> client.openScreen( this.getPreviousScreen() )
+		));
 
 		init = true;
 	}
@@ -293,14 +308,15 @@ public class ModsScreen extends AbstractScreen {
 
 	@Override
 	public void render(int mouseX, int mouseY, float delta) {
-//		this.renderBackground();
+		this.renderBackground();
 		this.tooltip = null;
 		ModListEntry selectedEntry = selected;
-		if (selectedEntry != null) {
+		super.renderChildren( mouseX, mouseY, delta );
+		if ( selectedEntry != null ) {
 			this.descriptionListWidget.render(mouseX, mouseY, delta);
 		}
-		this.modList.render( mouseX, mouseY, delta );
-		this.searchBox.render();
+		this.renderLabels( mouseX, mouseY );
+		this.renderButtons( mouseX, mouseY, delta );
 		GlStateManager.disableBlend();
 		drawCenteredString( this.textRenderer, I18n.translate("modmenu.title"), this.modList.getWidth() / 2, 8, 16777215 );
 		drawCenteredString( this.textRenderer, I18n.translate("modmenu.dropInfo.line1"), this.width - this.modList.getWidth() / 2, paneY / 2 - client.textRenderer.fontHeight - 1, 11184810 );
@@ -376,7 +392,6 @@ public class ModsScreen extends AbstractScreen {
 				);
 			}
 		}
-		super.render(mouseX, mouseY, delta);
 		if ( this.tooltip != null ) {
 			this.renderTooltip(
 				textRenderer.wrapLines(this.tooltip.asFormattedString(), Integer.MAX_VALUE),

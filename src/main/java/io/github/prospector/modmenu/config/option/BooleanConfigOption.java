@@ -5,7 +5,7 @@ import io.github.prospector.modmenu.util.TranslationUtil;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
-public class BooleanConfigOption {
+public class BooleanConfigOption implements OptionConvertable {
 	private final String key, translationKey;
 	private final boolean defaultValue;
 	private final Text enabledText;
@@ -48,11 +48,11 @@ public class BooleanConfigOption {
 		return ScreenTexts.composeGenericOptionText(new TranslatableText(translationKey), getValue() ? enabledText : disabledText);
 	}
 
-//	@Override
-//	public CyclingOption<Boolean> asOption() {
-//		if (enabledText != null && disabledText != null) {
-//			return CyclingOption.create(translationKey, enabledText, disabledText, ignored -> ConfigOptionStorage.getBoolean(key), (ignored, option, value) -> ConfigOptionStorage.setBoolean(key, value));
-//		}
-//		return CyclingOption.create(translationKey, ignored -> ConfigOptionStorage.getBoolean(key), (ignored, option, value) -> ConfigOptionStorage.setBoolean(key, value));
-//	}
+	@Override
+	public CyclingOption<Boolean> asOption() {
+		if (enabledText != null && disabledText != null) {
+			return CyclingOption.create(translationKey, enabledText, disabledText, ignored -> ConfigOptionStorage.getBoolean(key), (ignored, option, value) -> ConfigOptionStorage.setBoolean(key, value));
+		}
+		return CyclingOption.create(translationKey, ignored -> ConfigOptionStorage.getBoolean(key), (ignored, option, value) -> ConfigOptionStorage.setBoolean(key, value));
+	}
 }

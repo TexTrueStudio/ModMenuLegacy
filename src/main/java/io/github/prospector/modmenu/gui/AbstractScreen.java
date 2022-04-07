@@ -1,5 +1,6 @@
 package io.github.prospector.modmenu.gui;
 
+import io.github.prospector.modmenu.gui.widget.Renderable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.LabelWidget;
@@ -8,23 +9,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractScreen extends Screen {
-	private final List<Object> children = new ArrayList<>();
+	private final List<Renderable> children = new ArrayList<>();
+	private final Screen previous;
 
-	protected void addChild(Object searchBox) {
-		this.children.add( searchBox );
+	public AbstractScreen( Screen previous ) {
+		this.previous = previous;
+	}
+
+	protected void addChild(Renderable renderable) {
+		this.children.add( renderable );
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float tickDelta) {
+	public void render( int mouseX, int mouseY, float tickDelta ) {
+		this.renderChildren( mouseX, mouseY, tickDelta );
+		this.renderButtons( mouseX, mouseY, tickDelta );
+		this.renderLabels( mouseX, mouseY );
+	}
+
+	protected void renderChildren( int mouseX, int mouseY, float tickDelta ) {
+		for ( Renderable widget : this.children )
+			widget.render( mouseX, mouseY, tickDelta );
+	}
+
+	protected void renderButtons( int mouseX, int mouseY, float tickDelta ) {
 		for ( ButtonWidget widget : this.buttons ) {
 			widget.method_891( this.client, mouseX, mouseY, tickDelta );
 			if ( widget.isMouseOver( this.client, mouseX, mouseY ) ) {
 				widget.renderToolTip( mouseX, mouseY );
 			}
 		}
+	}
 
-		for ( LabelWidget widget : this.labels ) {
+	protected void renderLabels( int mouseX, int mouseY ) {
+		for ( LabelWidget widget : this.labels )
 			widget.render( this.client, mouseX, mouseY );
-		}
+	}
+
+	public Screen getPreviousScreen() {
+		return this.previous;
 	}
 }

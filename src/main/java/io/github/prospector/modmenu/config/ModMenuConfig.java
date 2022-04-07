@@ -2,10 +2,11 @@ package io.github.prospector.modmenu.config;
 
 import com.google.gson.annotations.SerializedName;
 import io.github.prospector.modmenu.api.Mod;
-import io.github.prospector.modmenu.config.option.BooleanConfigOption;
-import io.github.prospector.modmenu.config.option.EnumConfigOption;
-import io.github.prospector.modmenu.config.option.StringSetConfigOption;
+import io.github.prospector.modmenu.config.option.*;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Locale;
@@ -29,19 +30,26 @@ public class ModMenuConfig {
 	public static final BooleanConfigOption HIDE_CONFIG_BUTTONS = new BooleanConfigOption("hide_config_buttons", false);
 	public static final StringSetConfigOption HIDDEN_MODS = new StringSetConfigOption("hidden_mods", new HashSet<>());
 
-//	public static Option[] asOptions() {
-//		ArrayList<Option> options = new ArrayList<>();
-//		for (Field field : ModMenuConfig.class.getDeclaredFields()) {
-//			if (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()) && OptionConvertable.class.isAssignableFrom(field.getType()) && !field.getName().equals("HIDE_CONFIG_BUTTONS") && !field.getName().equals("MODIFY_TITLE_SCREEN") && !field.getName().equals("MODIFY_GAME_MENU")) {
-//				try {
-//					options.add(((OptionConvertable) field.get(null)).asOption());
-//				} catch (IllegalAccessException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
-//		return options.stream().toArray(Option[]::new);
-//	}
+	public static Option[] asOptions() {
+		ArrayList<Option> options = new ArrayList<>();
+		for ( Field field : ModMenuConfig.class.getDeclaredFields() ) {
+			if (
+					Modifier.isStatic( field.getModifiers() ) &&
+					Modifier.isFinal( field.getModifiers() ) &&
+					OptionConvertable.class.isAssignableFrom( field.getType() ) &&
+					!field.getName().equals( "HIDE_CONFIG_BUTTONS" ) &&
+					!field.getName().equals( "MODIFY_TITLE_SCREEN" ) &&
+					!field.getName().equals( "MODIFY_GAME_MENU" )
+			) {
+				try {
+					options.add( ( ( OptionConvertable ) field.get(null) ).asOption());
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return options.toArray( new Option[0] );
+	}
 
 	public enum Sorting {
 		@SerializedName("ascending")
@@ -49,7 +57,7 @@ public class ModMenuConfig {
 		@SerializedName("descending")
 		DESCENDING(ASCENDING.getComparator().reversed());
 
-		Comparator<Mod> comparator;
+		final Comparator<Mod> comparator;
 
 		Sorting(Comparator<Mod> comparator) {
 			this.comparator = comparator;

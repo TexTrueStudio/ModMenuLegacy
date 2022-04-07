@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class BetterEntryListWidget< E extends BetterEntryListWidget.Entry<E> > extends EntryListWidget {
+public abstract class BetterEntryListWidget< E extends BetterEntryListWidget.Entry<E> > extends EntryListWidget implements Renderable {
 	private final List<E> children = new Entries();
 	@Nullable
 	private E selected;

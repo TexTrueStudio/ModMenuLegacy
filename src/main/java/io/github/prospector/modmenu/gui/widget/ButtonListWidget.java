@@ -2,12 +2,12 @@ package io.github.prospector.modmenu.gui.widget;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import io.github.prospector.modmenu.config.option.Option;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.options.GameOptions;
-import net.minecraft.client.options.GameOptions.Option;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -16,23 +16,31 @@ import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.ButtonEntry> {
-	public ButtonListWidget(MinecraftClient minecraftClient, int i, int j, int k, int l, int m) {
-		super(minecraftClient, i, j, k, l, m);
+	public ButtonListWidget( MinecraftClient minecraftClient, int width, int height, int top, int bottom, int itemHeight ) {
+		super( minecraftClient, width, height, top, bottom, itemHeight );
 	}
 
-	public int addSingleOptionEntry(Option option) {
-		return this.addEntry(ButtonListWidget.ButtonEntry.create(this.client.options, this.width, option));
+	public int addSingleOptionEntry( Option option, int id ) {
+		return this.addEntry( ButtonListWidget.ButtonEntry.create( this.client.options, id, this.width, option ) );
 	}
 
-	public void addOptionEntry(Option firstOption, @Nullable Option secondOption) {
-		this.addEntry(ButtonListWidget.ButtonEntry.create(this.client.options, this.width, firstOption, secondOption));
+	public void addOptionEntry(Option firstOption, @Nullable Option secondOption, int id ) {
+		this.addEntry( ButtonListWidget.ButtonEntry.create(
+			this.client.options,
+			id,
+			this.width,
+			firstOption,
+			secondOption
+		));
 	}
 
-	public void addAll(Option[] options) {
-		for(int i = 0; i < options.length; i += 2) {
-			this.addOptionEntry(options[i], i < options.length - 1 ? options[i + 1] : null);
-		}
-
+	public void addAll( Option[] options, int id ) {
+		for ( int i = 0; i < options.length; i += 2 )
+			this.addOptionEntry(
+				options[i],
+				i < options.length - 1 ? options[ i + 1 ] : null,
+				id - i
+			);
 	}
 
 	public int getRowWidth() {
@@ -45,48 +53,56 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 
 	@Nullable
 	public ButtonWidget getButtonFor(Option option) {
-		for(ButtonListWidget.ButtonEntry buttonEntry : this.children()) {
+		for ( ButtonListWidget.ButtonEntry buttonEntry : this.children() ) {
 			ButtonWidget clickableWidget = buttonEntry.optionsToButtons.get(option);
-			if (clickableWidget != null) {
+			if ( clickableWidget != null )
 				return clickableWidget;
-			}
 		}
 
 		return null;
 	}
 
-	public Optional<ButtonWidget> getHoveredButton(double mouseX, double mouseY) {
-		for(ButtonListWidget.ButtonEntry buttonEntry : this.children()) {
-			for(ButtonWidget clickableWidget : buttonEntry.buttons) {
-				if (clickableWidget.isMouseOver( client, (int) mouseX, (int) mouseY)) {
+	public Optional<AbstractButtonWidget> getHoveredButton( double mouseX, double mouseY ) {
+		for ( ButtonEntry buttonEntry : this.children() )
+			for ( AbstractButtonWidget clickableWidget : buttonEntry.buttons )
+				if ( clickableWidget.isMouseOver( client, (int) mouseX, (int) mouseY ) )
 					return Optional.of(clickableWidget);
-				}
-			}
-		}
 
 		return Optional.empty();
 	}
 
+	@Override
+	public void handleMouse() {
+		super.handleMouse();
+		for ( ButtonEntry entry : this.children() )
+			entry.buttons.forEach( AbstractButtonWidget::handleMouse );
+	}
+
 	@Environment(EnvType.CLIENT)
 	protected static class ButtonEntry extends BetterEntryListWidget.Entry<ButtonListWidget.ButtonEntry> {
-		final Map<Option, ButtonWidget> optionsToButtons;
-		final List<ButtonWidget> buttons;
+		final Map<Option, AbstractButtonWidget> optionsToButtons;
+		final List<AbstractButtonWidget> buttons;
 
-		private ButtonEntry(Map<Option, ButtonWidget> optionsToButtons) {
+		private ButtonEntry(Map<Option, AbstractButtonWidget> optionsToButtons) {
 			this.optionsToButtons = optionsToButtons;
 			this.buttons = ImmutableList.copyOf(optionsToButtons.values());
 		}
 
-		public static ButtonListWidget.ButtonEntry create(GameOptions options, int width, Option option) {
-			return new ButtonListWidget.ButtonEntry( ImmutableMap.of( option, option.createButton( options, width / 2 - 155, 0, 310 ) ) );
+		public static ButtonListWidget.ButtonEntry create(GameOptions options, int id, int width, Option option) {
+			return new ButtonListWidget.ButtonEntry( ImmutableMap.of(
+				option, option.createButton( options, id, width / 2 - 155, 0, 310 )
+			) );
 		}
 
-		public static ButtonListWidget.ButtonEntry create(GameOptions options, int width, Option firstOption, @Nullable Option secondOption) {
-			ButtonWidget clickableWidget = firstOption.createButton( options, width / 2 - 155, 0, 150 );
+		public static ButtonListWidget.ButtonEntry create(GameOptions options, int id, int width, Option firstOption, @Nullable Option secondOption) {
+			AbstractButtonWidget clickableWidget = firstOption.createButton( options, id, width / 2 - 155, 0, 150 );
 			return secondOption == null
-					? new ButtonListWidget.ButtonEntry(ImmutableMap.of(firstOption, clickableWidget))
+					? new ButtonListWidget.ButtonEntry( ImmutableMap.of( firstOption, clickableWidget ) )
 					: new ButtonListWidget.ButtonEntry(
-					ImmutableMap.of( firstOption, clickableWidget, secondOption, secondOption.createButton( options, width / 2 - 155 + 160, 0, 150 ) )
+						ImmutableMap.of(
+							firstOption, clickableWidget,
+							secondOption, secondOption.createButton( options, id, width / 2 - 155 + 160, 0, 150 )
+						)
 			);
 		}
 
@@ -115,11 +131,11 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 		@Override
 		public void mouseReleased(int index, int mouseX, int mouseY, int button, int x, int y) { }
 
-		public List<ButtonWidget> children() {
+		public List<AbstractButtonWidget> children() {
 			return this.buttons;
 		}
 
-		public List<ButtonWidget> selectableChildren() {
+		public List<AbstractButtonWidget> selectableChildren() {
 			return this.buttons;
 		}
 	}

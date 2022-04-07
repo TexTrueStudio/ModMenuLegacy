@@ -7,17 +7,17 @@ import net.minecraft.text.TranslatableText;
 
 import java.util.Locale;
 
-public class EnumConfigOption<E extends Enum<E>> {
+public class EnumConfigOption<E extends Enum<E>> implements OptionConvertable {
 	private final String key, translationKey;
 	private final Class<E> enumClass;
 	private final E defaultValue;
 
 	public EnumConfigOption(String key, E defaultValue) {
-		ConfigOptionStorage.setEnum(key, defaultValue);
-		this.key = key;
 		this.translationKey = TranslationUtil.translationKeyOf("option", key);
 		this.enumClass = defaultValue.getDeclaringClass();
+		ConfigOptionStorage.setEnum(key, defaultValue);
 		this.defaultValue = defaultValue;
+		this.key = key;
 	}
 
 	public String getKey() {
@@ -52,8 +52,14 @@ public class EnumConfigOption<E extends Enum<E>> {
 		return ScreenTexts.composeGenericOptionText(new TranslatableText(translationKey), getValueText(this, getValue()));
 	}
 
-//	@Override
-//	public Option asOption() {
-//		return CyclingOption.create(translationKey, enumClass.getEnumConstants(), value -> getValueText(this, value), ignored -> ConfigOptionStorage.getEnum(key, enumClass), (ignored, option, value) -> ConfigOptionStorage.setEnum(key, value));
-//	}
+	@Override
+	public Option asOption() {
+		return CyclingOption.create(
+			translationKey,
+			enumClass.getEnumConstants(),
+			value -> getValueText(this, value),
+			ignored -> ConfigOptionStorage.getEnum(key, enumClass),
+			(ignored, option, value) -> ConfigOptionStorage.setEnum(key, value)
+		);
+	}
 }

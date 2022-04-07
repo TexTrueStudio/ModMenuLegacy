@@ -20,7 +20,7 @@ public class ModMenuTexturedButtonWidget extends AbstractButtonWidget {
 		this( id, x, y, width, height, u, v, texture, uWidth, vHeight, "", onPress, EMPTY);
 	}
 
-	protected ModMenuTexturedButtonWidget( int id, int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, String message, PressAction onPress, TooltipSupplier tooltipSupplier ) {
+	public ModMenuTexturedButtonWidget(int id, int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, String message, PressAction onPress, TooltipSupplier tooltipSupplier) {
 		super( id, x, y, width, height, new LiteralText( message ), onPress, tooltipSupplier );
 		this.uWidth = uWidth;
 		this.vHeight = vHeight;
