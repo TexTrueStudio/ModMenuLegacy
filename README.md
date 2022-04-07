@@ -3,9 +3,9 @@
 
 
 
-A picture's worth 2 words
+A picture's worth 2 words ( menu is still WIP )
 
-![](https://i.imgur.com/JKEatou.png "Mod Menu")
+![](https://gitlab.com/ENDERZOMBI102/modmenu-legacy/-/raw/1.12.2/images/mods_menu_screenshot.png?inline=false "Mod Menu")
 
 ### Developers:
 - Mod Menu is on maven at: https://maven.fabricmc.net/io/github/prospector/modmenu/
