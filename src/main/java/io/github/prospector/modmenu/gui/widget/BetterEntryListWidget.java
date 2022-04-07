@@ -6,6 +6,7 @@ import net.minecraft.client.gui.widget.EntryListWidget;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.AbstractList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,6 +14,10 @@ public abstract class BetterEntryListWidget< E extends BetterEntryListWidget.Ent
 	private final List<E> children = new Entries();
 	@Nullable
 	private E selected;
+	@Nullable
+	private E hoveredEntry;
+	@Nullable
+	private E focused;
 
 	public BetterEntryListWidget( MinecraftClient minecraftClient, int width, int height, int top, int bottom, int itemHeight ) {
 		super(minecraftClient, width, height, top, bottom, itemHeight);
@@ -27,6 +32,15 @@ public abstract class BetterEntryListWidget< E extends BetterEntryListWidget.Ent
 		return this.selected;
 	}
 
+	@Nullable
+	public E getFocused() {
+		return focused;
+	}
+
+	public void setFocused( @Nullable E focused ) {
+		this.focused = focused;
+	}
+
 	public final List<E> children() {
 		return this.children;
 	}
@@ -35,7 +49,11 @@ public abstract class BetterEntryListWidget< E extends BetterEntryListWidget.Ent
 		this.children.clear();
 	}
 
-	@Override
+	protected void replaceEntries(Collection<E> newEntries) {
+		this.children.clear();
+		this.children.addAll(newEntries);
+	}
+
 	public E getEntry(int index) {
 		return this.children().get(index);
 	}
@@ -47,6 +65,10 @@ public abstract class BetterEntryListWidget< E extends BetterEntryListWidget.Ent
 
 	protected int getEntryCount() {
 		return this.children().size();
+	}
+
+	protected boolean isSelectedEntry(int index) {
+		return Objects.equals(this.getSelectedOrNull(), this.children().get(index));
 	}
 
 	@Nullable
@@ -63,7 +85,6 @@ public abstract class BetterEntryListWidget< E extends BetterEntryListWidget.Ent
 		return bl;
 	}
 
-	@SuppressWarnings("unused")
 	public boolean isMouseOver(double mouseX, double mouseY) {
 		return mouseY >= (double) this.yStart &&
 				mouseY <= (double) this.yEnd &&
@@ -81,29 +102,26 @@ public abstract class BetterEntryListWidget< E extends BetterEntryListWidget.Ent
 		Entries() { }
 
 		public E get(int i) {
-			return this.entries.get(i);
+			return (E)this.entries.get(i);
 		}
 
 		public int size() {
 			return this.entries.size();
 		}
 
-		@Override
 		public E set(int i, E entry) {
-			E entry2 = this.entries.set(i, entry);
+			E entry2 = (E)this.entries.set(i, entry);
 			BetterEntryListWidget.this.setEntryParentList(entry);
 			return entry2;
 		}
 
-		@Override
 		public void add(int i, E entry) {
 			this.entries.add(i, entry);
 			BetterEntryListWidget.this.setEntryParentList(entry);
 		}
 
-		@Override
 		public E remove(int i) {
-			return this.entries.remove(i);
+			return (E)this.entries.remove(i);
 		}
 	}
 

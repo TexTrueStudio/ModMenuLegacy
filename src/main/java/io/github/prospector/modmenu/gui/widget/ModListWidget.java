@@ -12,19 +12,23 @@ import io.github.prospector.modmenu.gui.widget.entries.ParentEntry;
 import io.github.prospector.modmenu.util.mod.ModIconHandler;
 import io.github.prospector.modmenu.util.mod.ModSearch;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.math.MathHelper;
 
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ModListWidget extends BetterEntryListWidget<ModListEntry> {
+public class ModListWidget extends BetterEntryListWidget<ModListEntry> implements AutoCloseable {
 	public static final boolean DEBUG = Boolean.getBoolean("modmenu.debug");
 
-	private final ModIconHandler iconHandler = new ModIconHandler();
-	private final Set<Mod> addedMods = new HashSet<>();
-	private String selectedModId = null;
+	private final Map<Path, NativeImageBackedTexture> modIconsCache = new HashMap<>();
 	private final ModsScreen parent;
 	private List<Mod> mods = null;
+	private Set<Mod> addedMods = new HashSet<>();
+	private String selectedModId = null;
+	private final ModIconHandler iconHandler = new ModIconHandler();
 
 	public ModListWidget(MinecraftClient client, int width, int height, int y1, int y2, int entryHeight, String searchTerm, ModListWidget list, ModsScreen parent) {
 		super(client, width, height, y1, y2, entryHeight);
@@ -53,7 +57,6 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> {
 		}
 	}
 
-	@Override
 	public void setSelected(ModListEntry entry) {
 		super.setSelected( entry );
 		this.selectedModId = entry.getMod().getId();
@@ -171,6 +174,12 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> {
 		}
 	}
 
+	public final ModListEntry getEntryAtPos(double x, double y) {
+		int int_5 = MathHelper.floor(y - (double) this.yStart) - this.headerHeight + this.getScrollAmount() - 4;
+		int index = int_5 / this.entryHeight;
+		return x < (double) this.getScrollbarPosition() && x >= (double) getRowLeft() && x <= (double) (getRowLeft() + getRowWidth()) && index >= 0 && int_5 >= 0 && index < this.getEntryCount() ? children().get(index) : null;
+	}
+
 	@Override
 	protected int getScrollbarPosition() {
 		return this.width - 6;
@@ -181,8 +190,17 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> {
 		return this.width - (Math.max(0, this.getMaxPosition() - (this.yEnd - this.yStart - 4)) > 0 ? 18 : 12);
 	}
 
+//	@Override
+	protected int getRowLeft() {
+		return yStart + 6;
+	}
+
 	public int getWidth() {
 		return width;
+	}
+
+	public int getTop() {
+		return this.yStart;
 	}
 
 	public ModsScreen getParent() {
@@ -194,6 +212,17 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> {
 		return super.getMaxPosition() + 4;
 	}
 
+	public int getDisplayedCount() {
+		return children().size();
+	}
+
+	@Override
+	public void close() {
+		for (NativeImageBackedTexture tex : this.modIconsCache.values()) {
+			tex.clearGlId();
+		}
+	}
+
 	public int getDisplayedCountFor(Set<String> set) {
 		int count = 0;
 		for (ModListEntry c : children()) {
@@ -202,6 +231,18 @@ public class ModListWidget extends BetterEntryListWidget<ModListEntry> {
 			}
 		}
 		return count;
+	}
+
+	NativeImageBackedTexture getCachedModIcon(Path path) {
+		return this.modIconsCache.get(path);
+	}
+
+	void cacheModIcon(Path path, NativeImageBackedTexture tex) {
+		this.modIconsCache.put(path, tex);
+	}
+
+	public Set<Mod> getCurrentModSet() {
+		return addedMods;
 	}
 
 	public ModIconHandler getIconHandler() {

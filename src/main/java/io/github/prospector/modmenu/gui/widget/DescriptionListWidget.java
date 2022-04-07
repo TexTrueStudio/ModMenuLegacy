@@ -72,24 +72,13 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 					addEntry( new DescriptionEntry( "", this ) );
 					addEntry( new DescriptionEntry( I18n.translate("modmenu.links"), this ) );
 
-					if (sourceLink != null)
-						addEntry( new LinkEntry(
-							new LiteralText("  ").append( new TranslatableText("modmenu.source").setStyle(
-								new Style().setFormatting(Formatting.BLUE).setFormatting(Formatting.UNDERLINE)
-							)).asFormattedString(),
-							sourceLink,
-							this
-						));
+					if (sourceLink != null) {
+						addEntry(new LinkEntry(new LiteralText("  ").append(new TranslatableText("modmenu.source").setStyle( new Style().setFormatting(Formatting.BLUE).setFormatting((Formatting.UNDERLINE)))).asFormattedString(), sourceLink, this));
+					}
 
-					links.forEach(
-						(key, value) -> addEntry( new LinkEntry(
-							new LiteralText("  ").append( new TranslatableText(key)
-									.setStyle( new Style().setFormatting(Formatting.BLUE).setFormatting((Formatting.UNDERLINE)))
-							).asFormattedString(),
-							value,
-							this
-						))
-					);
+					links.forEach((key, value) -> {
+						addEntry( new LinkEntry(new LiteralText("  ").append(new TranslatableText(key).setStyle( new Style().setFormatting(Formatting.BLUE).setFormatting((Formatting.UNDERLINE)))).asFormattedString(), value, this));
+					});
 				}
 
 				Set<String> licenses = mod.getLicense();
@@ -105,11 +94,7 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 				if (!ModMenuConfig.HIDE_MOD_CREDITS.getValue()) {
 					if ("minecraft".equals(mod.getId())) {
 						addEntry( new DescriptionEntry("", this));
-						addEntry( new MojangCreditsEntry( new TranslatableText("modmenu.viewCredits").setStyle(
-							new Style().setFormatting(Formatting.BLUE).setFormatting(Formatting.UNDERLINE)
-						).asFormattedString(),
-							this
-						));
+						addEntry( new MojangCreditsEntry(new TranslatableText("modmenu.viewCredits").setStyle( new Style().setFormatting(Formatting.BLUE).setFormatting((Formatting.UNDERLINE))).asFormattedString(), this));
 					} else if ("java".equals(mod.getId())) {
 						addEntry( new DescriptionEntry( "", this));
 					} else {

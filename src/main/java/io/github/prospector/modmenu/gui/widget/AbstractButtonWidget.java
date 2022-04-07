@@ -107,6 +107,10 @@ public class AbstractButtonWidget extends ButtonWidget {
 		this.onPress = action;
 	}
 
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
 	@FunctionalInterface
 	public interface PressAction {
 		void onPress( AbstractButtonWidget button );
@@ -115,5 +119,7 @@ public class AbstractButtonWidget extends ButtonWidget {
 	@FunctionalInterface
 	public interface TooltipSupplier {
 		void onTooltip( AbstractButtonWidget button, int mouseX, int mouseY );
+
+		default void supply( Consumer<Text> consumer ) { }
 	}
 }

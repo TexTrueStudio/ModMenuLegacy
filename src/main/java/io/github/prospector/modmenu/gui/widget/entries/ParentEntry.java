@@ -9,7 +9,9 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ParentEntry extends ModListEntry {
 	private static final Identifier PARENT_MOD_TEXTURE = new Identifier(ModMenu.MOD_ID, "textures/gui/parent_mod.png");
@@ -26,12 +28,11 @@ public class ParentEntry extends ModListEntry {
 	// render()
 	@Override
 	public void method_6700(int index, int y, int x, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-		super.method_6700(index, x, y, rowWidth, rowHeight, mouseX, mouseY, hovered, tickDelta);
-		TextRenderer font = this.client.textRenderer;
+		super.method_6700(index, y, x, rowWidth, rowHeight, mouseX, mouseY, hovered, tickDelta);
+		TextRenderer font = client.textRenderer;
 		int childrenBadgeHeight = font.fontHeight;
-		//noinspection SuspiciousNameCombination
 		int childrenBadgeWidth = font.fontHeight;
-		int children = ModSearch.search( list.getParent(), list.getParent().getSearchInput(), this.children ).size();
+		int children = ModSearch.search( list.getParent(), list.getParent().getSearchInput(), getChildren() ).size();
 		int childrenWidth = font.getStringWidth( Integer.toString(children) ) - 1;
 
 		if (childrenBadgeWidth < childrenWidth + 4)
@@ -48,11 +49,11 @@ public class ParentEntry extends ModListEntry {
 		DrawableHelper.fill(childrenBadgeX + 1, childrenBadgeY + childrenBadgeHeight - 1, childrenBadgeX + childrenBadgeWidth - 1, childrenBadgeY + childrenBadgeHeight, childrenOutlineColor);
 		font.draw(Integer.toString(children), childrenBadgeX + childrenBadgeWidth / 2 - childrenWidth / 2, childrenBadgeY + 1, 0xCACACA);
 		this.hoveringIcon = mouseX >= x - 1 && mouseX <= x - 1 + 32 && mouseY >= y - 1 && mouseY <= y - 1 + 32;
-		if ( this.isMouseOver(mouseX, mouseY) ) {
+		if (isMouseOver(mouseX, mouseY)) {
 			DrawableHelper.fill(x, y, x + 32, y + 32, 0xA0909090);
 			this.client.getTextureManager().bindTexture(PARENT_MOD_TEXTURE);
-			int xOffset = this.list.getParent().showModChildren.contains( getMod().getId() ) ? 32 : 0;
-			int yOffset = this.hoveringIcon ? 32 : 0;
+			int xOffset = list.getParent().showModChildren.contains( getMod().getId() ) ? 32 : 0;
+			int yOffset = hoveringIcon ? 32 : 0;
 			GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			DrawableHelper.drawTexture(x, y, xOffset, yOffset, 32 + xOffset, 32 + yOffset, 256, 256);
 		}
@@ -62,17 +63,33 @@ public class ParentEntry extends ModListEntry {
 	public boolean mouseClicked(int index, int mouseX, int mouseY, int button, int x, int y) {
 		if (hoveringIcon) {
 			String id = getMod().getId();
-			if (this.list.getParent().showModChildren.contains(id)) {
-				this.list.getParent().showModChildren.remove(id);
+			if (list.getParent().showModChildren.contains(id)) {
+				list.getParent().showModChildren.remove(id);
 			} else {
-				this.list.getParent().showModChildren.add(id);
+				list.getParent().showModChildren.add(id);
 			}
-			this.list.filter(this.list.getParent().getSearchInput(), false);
+			list.filter(list.getParent().getSearchInput(), false);
 		}
 		return super.mouseClicked(index, mouseX, mouseY, button, x, y);
 	}
 
+	public void setChildren(List<Mod> children) {
+		this.children = children;
+	}
+
 	public void addChildren(List<Mod> children) {
 		this.children.addAll(children);
+	}
+
+	public void addChildren(Mod... children) {
+		this.children.addAll(Arrays.asList(children));
+	}
+
+	public List<Mod> getChildren() {
+		return children;
+	}
+
+	public boolean isMouseOver(double double_1, double double_2) {
+		return Objects.equals(this.list.getEntryAtPos(double_1, double_2), this);
 	}
 }

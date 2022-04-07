@@ -1,5 +1,6 @@
 package io.github.prospector.modmenu.util.mod;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import org.apache.commons.lang3.Validate;
