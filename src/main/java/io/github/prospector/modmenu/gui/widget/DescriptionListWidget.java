@@ -120,7 +120,6 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 	@Override
 	protected void renderHoleBackground(int y1, int y2, int startAlpha, int endAlpha) {
 		// Awful hack but it makes the background "seamless"
-//		ModsScreen.overlayBackground(xStart, y1, xEnd, y2, 64, 64, 64, startAlpha, endAlpha);
 		ModsScreen.overlayBackground(xStart, y1, xEnd, y2, (int) this.scrollAmount);
 	}
 
@@ -167,6 +166,11 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 		public LinkEntry(String text, String link, DescriptionListWidget widget) {
 			super(text, widget);
 			this.link = link;
+		}
+
+		@Override
+		public void method_6700(int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+			MinecraftClient.getInstance().textRenderer.drawWithShadow(text, x, y, 0x5555ff);
 		}
 
 		@Override
