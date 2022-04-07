@@ -6,5 +6,5 @@ modmenu.configsFolder=Отвори папка с конфигурации
 modmenu.configure=Конфигурирай...
 modmenu.modIdToolTip=ID на модификацията: %s
 modmenu.website=Уебсайт
-modmenu.issues=Проблеми
 modmenu.authorPrefix=От %s
+modmenu.descriptionTranslation.modmenu=Добавя меню с модове, за да видите списъка с модове, които сте инсталирали
