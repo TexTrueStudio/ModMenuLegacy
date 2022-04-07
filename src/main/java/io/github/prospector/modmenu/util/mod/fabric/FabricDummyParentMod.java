@@ -28,11 +28,11 @@ public class FabricDummyParentMod implements Mod {
 	@Override
 	public @NotNull String getName() {
 		FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
-		if (parentData != null) {
+		if ( parentData != null ) {
 			return parentData.getName().orElse("");
 		}
-		if (id.equals("fabric")) {
-			return "Fabric API";
+		if ( id.equals("fabric") || id.equals("legacy-fabric-api") ) {
+			return "Legacy Fabric API";
 		}
 		return id;
 	}
@@ -94,11 +94,11 @@ public class FabricDummyParentMod implements Mod {
 	@Override
 	public @NotNull Set<Badge> getBadges() {
 		FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
-		if (parentData != null) {
+		if ( parentData != null ) {
 			return parentData.getBadges();
 		}
 		Set<Badge> badges = new HashSet<>();
-		if (id.equals("fabric")) {
+		if ( id.equals("fabric") || id.equals("legacy-fabric-api") ) {
 			badges.add(Badge.LIBRARY);
 		}
 		return badges;

@@ -20,7 +20,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class ModMenuConfigManager {
-	private static final Logger LOGGER = LogManager.getLogger("ModMenu");
+	private static final Logger LOGGER = LogManager.getLogger("Mod Menu | Config Manager");
 	private static final File file = new File( FabricLoader.getInstance().getGameDir().resolve("config").toString(), ModMenu.MOD_ID + ".json" );
 
 	public static void initializeConfig() {

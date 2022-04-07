@@ -1,5 +1,6 @@
 package io.github.prospector.modmenu.mixin;
 
+import io.github.prospector.modmenu.event.ModMenuEventHandler;
 import io.github.prospector.modmenu.event.ScreenEvents;
 import io.github.prospector.modmenu.imixin.ScreenAcessor;
 import net.minecraft.client.MinecraftClient;
@@ -25,6 +26,6 @@ public class ScreenMixin implements ScreenAcessor {
 
 	@Inject( method = "init(Lnet/minecraft/client/MinecraftClient;II)V", at = @At("TAIL") )
 	public void onInit(MinecraftClient client, int width, int height, CallbackInfo ci) {
-		ScreenEvents.AFTER_INIT.invoker().afterInit( client, (Screen) (Object) this, width, height );
+		ModMenuEventHandler.afterScreenInit( client, (Screen) (Object) this, width, height );
 	}
 }

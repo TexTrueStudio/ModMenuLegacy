@@ -23,7 +23,7 @@ public class ModMenuOptionsScreen extends AbstractScreen {
 		super(previous);
 	}
 
-
+	@Override
 	public void init() {
 		this.list = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
 		this.list.addAll( ModMenuConfig.asOptions(), 998 );

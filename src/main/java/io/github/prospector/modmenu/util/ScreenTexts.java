@@ -27,8 +27,7 @@ public class ScreenTexts {
 	public static final Text LINE_BREAK = new LiteralText("\n");
 	public static final Text SENTENCE_SEPARATOR = new LiteralText(". ");
 
-	public ScreenTexts() {
-	}
+	private ScreenTexts() { }
 
 	public static Text onOrOff(boolean on) {
 		return on ? ON : OFF;

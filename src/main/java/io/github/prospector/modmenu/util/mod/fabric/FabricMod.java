@@ -78,19 +78,26 @@ public class FabricMod implements Mod {
 				parentData
 		);
 
-		/* Hardcode parents and badges for Fabric API & Fabric Loader */
+		/* Hardcode parents and badges for Legacy Fabric API & Fabric Loader */
 		String id = metadata.getId();
-		if (id.startsWith("fabric") && metadata.containsCustomValue("fabric-api:module-lifecycle")) {
-			if (FabricLoader.getInstance().isModLoaded("fabric-api")) {
-				modMenuData.fillParentIfEmpty("fabric-api");
+		if ( id.startsWith("legacy-fabric") ) {
+			if (FabricLoader.getInstance().isModLoaded("legacy-fabric-api")) {
+				modMenuData.fillParentIfEmpty("legacy-fabric-api");
 			} else {
 				modMenuData.fillParentIfEmpty("fabric");
 			}
 			modMenuData.badges.add(Badge.LIBRARY);
 		}
-		if (id.startsWith("fabric") && (id.equals("fabricloader") || metadata.getProvides().contains("fabricloader") || id.equals("fabric") || id.equals("fabric-api") || metadata.getProvides().contains("fabric") || metadata.getProvides().contains("fabric-api"))) {
-			modMenuData.badges.add(Badge.LIBRARY);
-		}
+		if (
+			id.contains("fabric") && (
+				id.equals("fabricloader") ||
+				metadata.getProvides().contains("fabricloader") ||
+				id.equals("fabric") ||
+				id.equals("legacy-fabric-api") ||
+				metadata.getProvides().contains("fabric") ||
+				metadata.getProvides().contains("legacy-fabric-api")
+			)
+		) modMenuData.badges.add(Badge.LIBRARY);
 
 		/* Add additional badges */
 		this.badges = modMenuData.badges;
@@ -135,7 +142,7 @@ public class FabricMod implements Mod {
 		} else if ("java".equals(getId())) {
 			iconSourceId = ModMenu.MOD_ID;
 			iconPath = "assets/" + ModMenu.MOD_ID + "/java_icon.png";
-		} else if ( getAuthors().contains("Legacy Fabric") || getAuthors().contains("Legacy Rewoven") ) {
+		} else if ( getAuthors().contains("Legacy Fabric") || getAuthors().contains("Legacy Rewoven") || getId().equals("fabricloader") ) {
 			iconSourceId = ModMenu.MOD_ID;
 			iconPath = "assets/" + ModMenu.MOD_ID + "/fabric_icon.png";
 		}
@@ -288,22 +295,17 @@ public class FabricMod implements Mod {
 			return dummyParentData;
 		}
 
-		public void addClientBadge(boolean add) {
-			if (add) {
-				badges.add(Badge.CLIENT);
-			}
+		public void addClientBadge() {
+			badges.add(Badge.CLIENT);
 		}
 
-		public void addLibraryBadge(boolean add) {
-			if (add) {
-				badges.add(Badge.LIBRARY);
-			}
+		public void addLibraryBadge() {
+			badges.add(Badge.LIBRARY);
 		}
 
 		public void fillParentIfEmpty(String parent) {
-			if (!this.parent.isPresent()) {
+			if (! this.parent.isPresent() )
 				this.parent = Optional.of(parent);
-			}
 		}
 
 		public static class DummyParentData {
