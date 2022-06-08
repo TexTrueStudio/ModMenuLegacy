@@ -46,9 +46,6 @@
   "mixins": [
     "mixins.modmenu.json"
   ],
-  "custom": {
-    "modmenu:clientsideOnly": true
-  },
   "depends": {
     "legacy-fabric-api": "*"
   }

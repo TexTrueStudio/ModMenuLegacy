@@ -38,7 +38,7 @@ public class FabricDummyParentMod implements Mod {
 	}
 
 	@Override
-	public @NotNull NativeImageBackedTexture getIcon(ModIconHandler iconHandler, int i) {
+	public @NotNull NativeImageBackedTexture getIcon( ModIconHandler iconHandler, int i ) {
 		String iconSourceId = host.getId();
 		FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
 		String iconPath = null;
@@ -50,11 +50,16 @@ public class FabricDummyParentMod implements Mod {
 		}
 		if (iconPath == null) {
 			iconSourceId = ModMenu.MOD_ID;
-			iconPath = "assets/" + ModMenu.MOD_ID + "/unknown_parent.png";
+			iconPath = "assets/" + ModMenu.MOD_ID + "/icons/unknown_parent.png";
 		}
 		final String finalIconSourceId = iconSourceId;
-		ModContainer iconSource = FabricLoader.getInstance().getModContainer(iconSourceId).orElseThrow(() -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + finalIconSourceId));
-		return Objects.requireNonNull(iconHandler.createIcon(iconSource, iconPath), "Mod icon for " + getId() + " is null somehow (should be filled with default in this case)");
+		ModContainer iconSource = FabricLoader.getInstance()
+			.getModContainer(iconSourceId)
+			.orElseThrow( () -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + finalIconSourceId) );
+		return Objects.requireNonNull(
+			iconHandler.createIcon( iconSource, iconPath ),
+			"Mod icon for " + getId() + " is null somehow (should be filled with default in this case)"
+		);
 	}
 
 	@Override

@@ -34,7 +34,10 @@ import java.util.function.Supplier;
 public class ModMenu implements ClientModInitializer {
 	public static final String MOD_ID = "modmenu";
 	public static final Logger LOGGER = LogManager.getLogger("Mod Menu");
-	public static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
+	public static final Gson GSON = new GsonBuilder()
+		.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+		.setPrettyPrinting()
+		.create();
 
 	public static final Map<String, Mod> MODS = new HashMap<>();
 	public static final Map<String, Mod> ROOT_MODS = new HashMap<>();
@@ -65,12 +68,15 @@ public class ModMenu implements ClientModInitializer {
 	public void onInitializeClient() {
 		ModMenuConfigManager.initializeConfig();
 		Map< String, ConfigScreenFactory<?> > factories = new HashMap<>();
+		Map< String, String > additionalParents = new HashMap<>();
 		FabricLoader.getInstance().getEntrypointContainers("modmenu", ModMenuApi.class).forEach( entrypoint -> {
 			ModMetadata meta = entrypoint.getProvider().getMetadata();
 			String modId = meta.getId();
 			try {
 				ModMenuApi api = entrypoint.getEntrypoint();
 				factories.put( modId, api.getModConfigScreenFactory() );
+				api.getAdditionalMods().forEach( mod -> MODS.put( mod.getId(), mod ) );
+				additionalParents.putAll( api.getAdditionalParents() );
 				dynamicScreenFactories.add( api::getProvidedConfigScreenFactories );
 			} catch ( Throwable e ) {
 				LOGGER.error("Mod {} provides a broken implementation of ModMenuApi", modId, e);
@@ -87,6 +93,7 @@ public class ModMenu implements ClientModInitializer {
 		}
 
 		Map<String, Mod> dummyParents = new HashMap<>();
+		// Init parents map
 		for ( Mod mod : MODS.values() ) {
 			String parentId = mod.getParent();
 			if ( parentId != null ) {
@@ -102,6 +109,26 @@ public class ModMenu implements ClientModInitializer {
 				ROOT_MODS.put(mod.getId(), mod);
 			}
 		}
+		for ( Map.Entry<String, String> entry : additionalParents.entrySet() ) {
+			// get both the parentId and the child mod object
+			String parentId = entry.getValue();
+			Mod mod = MODS.get( entry.getKey() );
+			// if neither of them are null
+			if ( parentId != null && mod != null ) {
+				// get the parent mod obj
+				Mod parent = MODS.getOrDefault( parentId, dummyParents.get( parentId ) );
+				if ( parent != null ) {
+					// if it isn't null, add the child to it
+					if ( mod instanceof FabricMod ) {
+						parent = new FabricDummyParentMod( (FabricMod) entry, parentId );
+						dummyParents.put( parentId, parent );
+					}
+				}
+				PARENT_MAP.put( parent, MODS.get( entry.getKey() ) );
+				ROOT_MODS.remove( entry.getKey() );
+			}
+		}
+
 		MODS.putAll( dummyParents );
 	}
 

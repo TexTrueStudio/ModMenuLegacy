@@ -100,7 +100,7 @@ public class ModListEntry extends BetterEntryListWidget.Entry<ModListEntry> {
 		if ( this.iconLocation == null ) {
 			this.iconLocation = new Identifier( ModMenu.MOD_ID, mod.getId() + "_icon" );
 			NativeImageBackedTexture icon = mod.getIcon( list.getIconHandler(), 64 * this.client.options.guiScale );
-			if (icon != null) {
+			if ( icon != null ) {
 				this.client.getTextureManager().loadTexture(this.iconLocation, icon);
 			} else {
 				this.iconLocation = UNKNOWN_ICON;

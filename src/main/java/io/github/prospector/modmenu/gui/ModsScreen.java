@@ -101,7 +101,16 @@ public class ModsScreen extends AbstractScreen {
 				ModsScreen.this.modList.filter( text, false );
 			}
 		});
-		this.modList = new ModListWidget(this.client, paneWidth, this.height, paneY + 19, this.height - 36, ModMenuConfig.COMPACT_LIST.getValue() ? 23 : 36, this.searchBox.getText(), this.modList, this);
+		this.modList = new ModListWidget(
+			this.client,
+			this.paneWidth,
+			this.height,
+			this.paneY + 19,
+			this.height - 36,
+			ModMenuConfig.COMPACT_LIST.getValue() ? 23 : 36,
+			this.searchBox.getText(),
+			this
+		);
 		this.modList.setXPos(0);
 		modList.reloadFilters();
 
@@ -330,6 +339,11 @@ public class ModsScreen extends AbstractScreen {
 		}
 		this.renderLabels( mouseX, mouseY );
 		this.renderButtons( mouseX, mouseY, delta );
+//		textRenderer.draw(  // very useful debug text
+//			String.format( "X: %s Y %s OnEntry: %s", mouseX, mouseY, this.modList.getEntryAt( mouseX, mouseY ) ),
+//			10, 10, 0xF0F0F0
+//		);
+
 		GlStateManager.disableBlend();
 		drawCenteredString( this.textRenderer, I18n.translate("modmenu.title"), this.modList.getWidth() / 2, 8, 16777215 );
 		Text fullModCount = computeModCountText(true);

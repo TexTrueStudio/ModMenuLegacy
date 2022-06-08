@@ -111,10 +111,12 @@ public class ModMenuConfigManager {
 			LOGGER.error( "Couldn't save Mod Menu configuration file", e );
 		}
 
-		String jsonString = ModMenu.GSON.toJson(config);
+		// ensure config dir exist
+		//noinspection ResultOfMethodCallIgnored
+		file.getParentFile().mkdirs();
 
-		try (FileWriter fileWriter = new FileWriter(file)) {
-			fileWriter.write(jsonString);
+		try ( FileWriter fileWriter = new FileWriter(file) ) {
+			fileWriter.write( ModMenu.GSON.toJson(config) );
 		} catch (IOException e) {
 			LOGGER.error( "Couldn't save Mod Menu configuration file", e );
 		}
