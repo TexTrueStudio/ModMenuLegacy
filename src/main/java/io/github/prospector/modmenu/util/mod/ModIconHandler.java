@@ -1,6 +1,5 @@
 package io.github.prospector.modmenu.util.mod;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import org.apache.commons.lang3.Validate;
@@ -23,25 +22,15 @@ public class ModIconHandler {
 
 	public NativeImageBackedTexture createIcon( ModContainer iconSource, String iconPath ) {
 		try {
-			Path foundPath = null;
-			for ( Path path : iconSource.getRootPaths() ) {
-				if ( path.resolve( iconPath ).toFile().exists() ) {
-					foundPath = path.resolve( iconPath );
-					break;
-				}
-			}
+			Path foundPath = iconSource.findPath( iconPath ).orElse( null );
 
 			if ( foundPath == null )
 				throw new RuntimeException( "Path not found!" );
 
 			NativeImageBackedTexture cachedIcon = getCachedModIcon( foundPath );
-			if ( cachedIcon != null ) {
+			if ( cachedIcon != null )
 				return cachedIcon;
-			}
-			cachedIcon = getCachedModIcon( foundPath );
-			if ( cachedIcon != null ) {
-				return cachedIcon;
-			}
+
 			try ( InputStream inputStream = Files.newInputStream( foundPath ) ) {
 				BufferedImage image = ImageIO.read( Objects.requireNonNull( inputStream ) );
 				Validate.validState( image.getHeight() == image.getWidth(), "Must be square icon" );
@@ -50,10 +39,14 @@ public class ModIconHandler {
 				return tex;
 			}
 
-		} catch ( Throwable t ) {
-			if ( !iconPath.equals( "assets/" + iconSource.getMetadata().getId() + "/icon.png" ) ) {
-				LOGGER.error( "Invalid mod icon for icon source {}: {}", iconSource.getMetadata().getId(), iconPath, t );
-			}
+		} catch ( Throwable err ) {
+			if ( !iconPath.equals( "assets/" + iconSource.getMetadata().getId() + "/icon.png" ) )
+				LOGGER.error(
+					"Invalid mod icon for icon source {}: {}",
+					iconSource.getMetadata().getId(),
+					iconPath,
+					err
+				);
 			return null;
 		}
 	}

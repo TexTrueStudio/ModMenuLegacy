@@ -6,14 +6,13 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
 
-import net.minecraft.datafix.DataFixer;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
-public class ScreenTexts {
+public final class ScreenTexts {
 	public static final Text GRAY_DEFAULT_SEPARATOR_TEXT = new LiteralText( ", " ).setStyle( new Style().setFormatting( Formatting.GRAY ) );
 	public static final Text ON = new TranslatableText( "options.on" );
 	public static final Text OFF = new TranslatableText( "options.off" );
@@ -34,11 +33,11 @@ public class ScreenTexts {
 	}
 
 	public static Text composeToggleText( Text text, boolean value ) {
-		return new TranslatableText( value ? "options.on.composed" : "options.off.composed", new Object[] { text } );
+		return new TranslatableText( value ? "options.on.composed" : "options.off.composed", text );
 	}
 
 	public static Text composeGenericOptionText( Text text, Text value ) {
-		return new TranslatableText( "options.generic_value", new Object[] { text, value } );
+		return new TranslatableText( "options.generic_value", text, value );
 	}
 
 	public static Text joinSentences( Text first, Text second ) {
