@@ -72,4 +72,9 @@ public interface ModMenuApi {
 	default Map<String, String> getAdditionalParents() {
 		return Collections.emptyMap();
 	}
+
+	/**
+	 * Called before mod list initialization to find all possible badges
+	 */
+	default void onSetupBadges() { }
 }
