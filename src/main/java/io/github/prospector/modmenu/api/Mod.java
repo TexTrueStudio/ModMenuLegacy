@@ -71,13 +71,11 @@ public interface Mod {
 
 		private final Text text;
 		private final int outlineColor, fillColor;
-		private final String key;
 
-		private Badge( String translationKey, int outlineColor, int fillColor, String key ) {
+		private Badge( String translationKey, int outlineColor, int fillColor ) {
 			this.text = new TranslatableText( translationKey );
 			this.outlineColor = outlineColor;
 			this.fillColor = fillColor;
-			this.key = key;
 		}
 
 		public Text getText() {
@@ -100,7 +98,7 @@ public interface Mod {
 		}
 
 		public static Badge register( String translationKey, int outlineColor, int fillColor, String key ) {
-			Badge badge = new Badge( translationKey, outlineColor, fillColor, key );
+			Badge badge = new Badge( translationKey, outlineColor, fillColor );
 			KEY_MAP.putIfAbsent( key, badge );
 			return badge;
 		}
