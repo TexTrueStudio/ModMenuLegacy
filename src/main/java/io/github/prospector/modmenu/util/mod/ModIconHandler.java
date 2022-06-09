@@ -17,11 +17,11 @@ import java.util.Map;
 import java.util.Objects;
 
 public class ModIconHandler {
-	private static final Logger LOGGER = LogManager.getLogger("Mod Menu | ModIconHandler");
+	private static final Logger LOGGER = LogManager.getLogger( "Mod Menu | ModIconHandler" );
 
 	private final Map<Path, NativeImageBackedTexture> modIconCache = new HashMap<>();
 
-	public NativeImageBackedTexture createIcon(ModContainer iconSource, String iconPath) {
+	public NativeImageBackedTexture createIcon( ModContainer iconSource, String iconPath ) {
 		try {
 			Path foundPath = null;
 			for ( Path path : iconSource.getRootPaths() ) {
@@ -32,37 +32,37 @@ public class ModIconHandler {
 			}
 
 			if ( foundPath == null )
-				throw new RuntimeException("Path not found!");
+				throw new RuntimeException( "Path not found!" );
 
-			NativeImageBackedTexture cachedIcon = getCachedModIcon(foundPath);
+			NativeImageBackedTexture cachedIcon = getCachedModIcon( foundPath );
 			if ( cachedIcon != null ) {
 				return cachedIcon;
 			}
-			cachedIcon = getCachedModIcon(foundPath);
-			if (cachedIcon != null) {
+			cachedIcon = getCachedModIcon( foundPath );
+			if ( cachedIcon != null ) {
 				return cachedIcon;
 			}
-			try (InputStream inputStream = Files.newInputStream(foundPath)) {
-				BufferedImage image = ImageIO.read( Objects.requireNonNull(inputStream) );
-				Validate.validState(image.getHeight() == image.getWidth(), "Must be square icon");
-				NativeImageBackedTexture tex = new NativeImageBackedTexture(image);
-				cacheModIcon(foundPath, tex);
+			try ( InputStream inputStream = Files.newInputStream( foundPath ) ) {
+				BufferedImage image = ImageIO.read( Objects.requireNonNull( inputStream ) );
+				Validate.validState( image.getHeight() == image.getWidth(), "Must be square icon" );
+				NativeImageBackedTexture tex = new NativeImageBackedTexture( image );
+				cacheModIcon( foundPath, tex );
 				return tex;
 			}
 
-		} catch (Throwable t) {
-			if (!iconPath.equals("assets/" + iconSource.getMetadata().getId() + "/icon.png")) {
-				LOGGER.error("Invalid mod icon for icon source {}: {}", iconSource.getMetadata().getId(), iconPath, t);
+		} catch ( Throwable t ) {
+			if ( !iconPath.equals( "assets/" + iconSource.getMetadata().getId() + "/icon.png" ) ) {
+				LOGGER.error( "Invalid mod icon for icon source {}: {}", iconSource.getMetadata().getId(), iconPath, t );
 			}
 			return null;
 		}
 	}
 
-	NativeImageBackedTexture getCachedModIcon(Path path) {
-		return modIconCache.get(path);
+	NativeImageBackedTexture getCachedModIcon( Path path ) {
+		return modIconCache.get( path );
 	}
 
-	void cacheModIcon(Path path, NativeImageBackedTexture tex) {
-		modIconCache.put(path, tex);
+	void cacheModIcon( Path path, NativeImageBackedTexture tex ) {
+		modIconCache.put( path, tex );
 	}
 }

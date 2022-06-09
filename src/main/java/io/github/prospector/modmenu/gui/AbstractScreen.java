@@ -16,7 +16,7 @@ public abstract class AbstractScreen extends Screen {
 		this.previous = previous;
 	}
 
-	protected void addChild(Renderable renderable) {
+	protected void addChild( Renderable renderable ) {
 		this.children.add( renderable );
 	}
 

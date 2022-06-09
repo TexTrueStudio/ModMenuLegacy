@@ -68,10 +68,10 @@ public class ParentEntry extends ModListEntry {
 				iconSize + xOffset,
 				iconSize + yOffset,
 				ModMenuConfig.COMPACT_LIST.getValue() ?
-					(int) (256 / (FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE)) :
+					(int) ( 256 / ( FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE ) ) :
 					256,
 				ModMenuConfig.COMPACT_LIST.getValue() ?
-					(int) (256 / (FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE)) :
+					(int) ( 256 / ( FULL_ICON_SIZE / (double) COMPACT_ICON_SIZE ) ) :
 					256
 			);
 		}

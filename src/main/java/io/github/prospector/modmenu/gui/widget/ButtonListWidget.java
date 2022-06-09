@@ -24,21 +24,21 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 		return this.addEntry( ButtonListWidget.ButtonEntry.create( this.client.options, id, this.width, option ) );
 	}
 
-	public void addOptionEntry(Option firstOption, @Nullable Option secondOption, int id ) {
+	public void addOptionEntry( Option firstOption, @Nullable Option secondOption, int id ) {
 		this.addEntry( ButtonListWidget.ButtonEntry.create(
 			this.client.options,
 			id,
 			this.width,
 			firstOption,
 			secondOption
-		));
+		) );
 	}
 
 	public void addAll( Option[] options, int id ) {
 		for ( int i = 0; i < options.length; i += 2 )
 			this.addOptionEntry(
 				options[i],
-				i < options.length - 1 ? options[ i + 1 ] : null,
+				i < options.length - 1 ? options[i + 1] : null,
 				id - i
 			);
 	}
@@ -52,9 +52,9 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 	}
 
 	@Nullable
-	public ButtonWidget getButtonFor(Option option) {
+	public ButtonWidget getButtonFor( Option option ) {
 		for ( ButtonListWidget.ButtonEntry buttonEntry : this.children() ) {
-			ButtonWidget clickableWidget = buttonEntry.optionsToButtons.get(option);
+			ButtonWidget clickableWidget = buttonEntry.optionsToButtons.get( option );
 			if ( clickableWidget != null )
 				return clickableWidget;
 		}
@@ -66,7 +66,7 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 		for ( ButtonEntry buttonEntry : this.children() )
 			for ( AbstractButtonWidget clickableWidget : buttonEntry.buttons )
 				if ( clickableWidget.isMouseOver( client, (int) mouseX, (int) mouseY ) )
-					return Optional.of(clickableWidget);
+					return Optional.of( clickableWidget );
 
 		return Optional.empty();
 	}
@@ -83,48 +83,49 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 		final Map<Option, AbstractButtonWidget> optionsToButtons;
 		final List<AbstractButtonWidget> buttons;
 
-		private ButtonEntry(Map<Option, AbstractButtonWidget> optionsToButtons) {
+		private ButtonEntry( Map<Option, AbstractButtonWidget> optionsToButtons ) {
 			this.optionsToButtons = optionsToButtons;
-			this.buttons = ImmutableList.copyOf(optionsToButtons.values());
+			this.buttons = ImmutableList.copyOf( optionsToButtons.values() );
 		}
 
-		public static ButtonListWidget.ButtonEntry create(GameOptions options, int id, int width, Option option) {
+		public static ButtonListWidget.ButtonEntry create( GameOptions options, int id, int width, Option option ) {
 			return new ButtonListWidget.ButtonEntry( ImmutableMap.of(
 				option, option.createButton( options, id, width / 2 - 155, 0, 310 )
 			) );
 		}
 
-		public static ButtonListWidget.ButtonEntry create(GameOptions options, int id, int width, Option firstOption, @Nullable Option secondOption) {
+		public static ButtonListWidget.ButtonEntry create( GameOptions options, int id, int width, Option firstOption, @Nullable Option secondOption ) {
 			AbstractButtonWidget clickableWidget = firstOption.createButton( options, id, width / 2 - 155, 0, 150 );
 			return secondOption == null
-					? new ButtonListWidget.ButtonEntry( ImmutableMap.of( firstOption, clickableWidget ) )
-					: new ButtonListWidget.ButtonEntry(
-						ImmutableMap.of(
-							firstOption, clickableWidget,
-							secondOption, secondOption.createButton( options, id, width / 2 - 155 + 160, 0, 150 )
-						)
+				? new ButtonListWidget.ButtonEntry( ImmutableMap.of( firstOption, clickableWidget ) )
+				: new ButtonListWidget.ButtonEntry(
+				ImmutableMap.of(
+					firstOption, clickableWidget,
+					secondOption, secondOption.createButton( options, id, width / 2 - 155 + 160, 0, 150 )
+				)
 			);
 		}
 
 		@Override
-		public void render(int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-			this.method_6700(index, x, y, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
+		public void render( int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
+			this.method_6700( index, x, y, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta );
 		}
 
 		@Override
-		public void method_9473(int i, int j, int k, float f) { }
+		public void method_9473( int i, int j, int k, float f ) {
+		}
 
 		// render()
 		@Override
-		public void method_6700(int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+		public void method_6700( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
 			this.buttons.forEach( button -> {
 				button.y = y;
 				button.method_891( MinecraftClient.getInstance(), mouseX, mouseY, tickDelta );
-			});
+			} );
 		}
 
 		@Override
-		public boolean mouseClicked(int index, int mouseX, int mouseY, int button, int x, int y) {
+		public boolean mouseClicked( int index, int mouseX, int mouseY, int button, int x, int y ) {
 			this.buttons.forEach( buttonWidget -> {
 				if ( buttonWidget.isMouseOver( MinecraftClient.getInstance(), mouseX, mouseY ) )
 					buttonWidget.mouseReleased( mouseX, mouseY );
@@ -133,7 +134,8 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 		}
 
 		@Override
-		public void mouseReleased(int index, int mouseX, int mouseY, int button, int x, int y) { }
+		public void mouseReleased( int index, int mouseX, int mouseY, int button, int x, int y ) {
+		}
 
 		public List<AbstractButtonWidget> children() {
 			return this.buttons;

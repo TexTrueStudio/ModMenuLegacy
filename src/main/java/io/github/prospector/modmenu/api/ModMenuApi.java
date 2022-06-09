@@ -53,12 +53,13 @@ public interface ModMenuApi {
 	 *
 	 * @return a map of mod ids to screen factories.
 	 */
-	default Map< String, ConfigScreenFactory<?> > getProvidedConfigScreenFactories() {
+	default Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
 		return ImmutableMap.of();
 	}
 
 	/**
 	 * Used to provide additional mods to the mods menu
+	 *
 	 * @return a collection of {@link Mod} objects
 	 */
 	default Collection<Mod> getAdditionalMods() {
@@ -67,6 +68,7 @@ public interface ModMenuApi {
 
 	/**
 	 * Used to provide additional parents to the mods menu.
+	 *
 	 * @return a {@link Map} of child id-parent id keyvalues
 	 */
 	default Map<String, String> getAdditionalParents() {
@@ -76,5 +78,6 @@ public interface ModMenuApi {
 	/**
 	 * Called before mod list initialization to find all possible badges
 	 */
-	default void onSetupBadges() { }
+	default void onSetupBadges() {
+	}
 }

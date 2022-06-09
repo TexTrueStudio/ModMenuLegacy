@@ -16,62 +16,62 @@ import java.security.PrivilegedAction;
 import java.util.Locale;
 
 public class UrlUtil {
-	private static final Logger LOGGER = LogManager.getLogger("Mod Menu | URL Utils");
+	private static final Logger LOGGER = LogManager.getLogger( "Mod Menu | URL Utils" );
 
 	public static OperatingSystem getOperatingSystem() {
-		String string = System.getProperty("os.name").toLowerCase(Locale.ROOT);
-		if (string.contains("win")) {
+		String string = System.getProperty( "os.name" ).toLowerCase( Locale.ROOT );
+		if ( string.contains( "win" ) ) {
 			return OperatingSystem.WINDOWS;
-		} else if (string.contains("mac")) {
+		} else if ( string.contains( "mac" ) ) {
 			return OperatingSystem.OSX;
-		} else if (string.contains("solaris")) {
+		} else if ( string.contains( "solaris" ) ) {
 			return OperatingSystem.SOLARIS;
-		} else if (string.contains("sunos")) {
+		} else if ( string.contains( "sunos" ) ) {
 			return OperatingSystem.SOLARIS;
-		} else if (string.contains("linux")) {
+		} else if ( string.contains( "linux" ) ) {
 			return OperatingSystem.LINUX;
 		} else {
-			return string.contains("unix") ? OperatingSystem.LINUX : OperatingSystem.UNKNOWN;
+			return string.contains( "unix" ) ? OperatingSystem.LINUX : OperatingSystem.UNKNOWN;
 		}
 	}
 
 	public enum OperatingSystem {
-		LINUX("linux"),
-		SOLARIS("solaris"),
-		WINDOWS("windows") {
+		LINUX( "linux" ),
+		SOLARIS( "solaris" ),
+		WINDOWS( "windows" ) {
 			@Override
-			protected String[] getURLOpenCommand(URL url) {
-				return new String[]{ "rundll32", "url.dll,FileProtocolHandler", url.toString() };
+			protected String[] getURLOpenCommand( URL url ) {
+				return new String[] { "rundll32", "url.dll,FileProtocolHandler", url.toString() };
 			}
 		},
-		OSX("mac") {
+		OSX( "mac" ) {
 			@Override
-			protected String[] getURLOpenCommand(URL url) {
-				return new String[]{ "open", url.toString() };
+			protected String[] getURLOpenCommand( URL url ) {
+				return new String[] { "open", url.toString() };
 			}
 		},
-		UNKNOWN("unknown");
+		UNKNOWN( "unknown" );
 
 		private final String name;
 
-		OperatingSystem(String name) {
+		OperatingSystem( String name ) {
 			this.name = name;
 		}
 
-		public void open(URL url) {
+		public void open( URL url ) {
 			try {
 				Process process = AccessController.doPrivileged( (PrivilegedAction<Process>) () -> {
 					try {
-						return Runtime.getRuntime().exec( this.getURLOpenCommand(url) );
-					} catch (IOException e) {
+						return Runtime.getRuntime().exec( this.getURLOpenCommand( url ) );
+					} catch ( IOException e ) {
 						LOGGER.error( "Couldn't open url '{}'", url, e );
 					}
 					return null;
-				});
+				} );
 				if ( process == null )
 					return;
 				for ( String string : IOUtils.readLines( process.getErrorStream(), Charsets.UTF_8 ) )
-					LOGGER.error(string);
+					LOGGER.error( string );
 
 				process.getInputStream().close();
 				process.getErrorStream().close();
@@ -82,38 +82,38 @@ public class UrlUtil {
 
 		}
 
-		public void open(URI uri) {
+		public void open( URI uri ) {
 			try {
-				this.open(uri.toURL());
-			} catch (MalformedURLException var3) {
-				LOGGER.error("Couldn't open uri '{}'", uri, var3);
+				this.open( uri.toURL() );
+			} catch ( MalformedURLException var3 ) {
+				LOGGER.error( "Couldn't open uri '{}'", uri, var3 );
 			}
 
 		}
 
-		public void open(File file) {
+		public void open( File file ) {
 			try {
-				this.open(file.toURI().toURL());
-			} catch (MalformedURLException var3) {
-				LOGGER.error("Couldn't open file '{}'", file, var3);
+				this.open( file.toURI().toURL() );
+			} catch ( MalformedURLException var3 ) {
+				LOGGER.error( "Couldn't open file '{}'", file, var3 );
 			}
 
 		}
 
-		protected String[] getURLOpenCommand(URL url) {
+		protected String[] getURLOpenCommand( URL url ) {
 			String string = url.toString();
-			if ("file".equals(url.getProtocol())) {
-				string = string.replace("file:", "file://");
+			if ( "file".equals( url.getProtocol() ) ) {
+				string = string.replace( "file:", "file://" );
 			}
 
-			return new String[]{"xdg-open", string};
+			return new String[] { "xdg-open", string };
 		}
 
-		public void open(String uri) {
+		public void open( String uri ) {
 			try {
-				this.open(new URI(uri).toURL());
-			} catch (MalformedURLException | IllegalArgumentException | URISyntaxException var3) {
-				LOGGER.error("Couldn't open uri '{}'", uri, var3);
+				this.open( new URI( uri ).toURL() );
+			} catch ( MalformedURLException | IllegalArgumentException | URISyntaxException var3 ) {
+				LOGGER.error( "Couldn't open uri '{}'", uri, var3 );
 			}
 
 		}

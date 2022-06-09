@@ -19,12 +19,15 @@ public class MixinTitleScreen extends Screen {
 		),
 		index = 1
 	)
-	private int adjustRealmsHeight(int height) {
-		if (ModMenuConfig.MODIFY_TITLE_SCREEN.getValue() && ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.CLASSIC) {
-			return height - 51;
-		} else if (ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.REPLACE_REALMS || ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK) {
-			return -99999;
-		}
+	private int adjustRealmsHeight( int height ) {
+		if (
+			ModMenuConfig.MODIFY_TITLE_SCREEN.getValue() &&
+			ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.CLASSIC
+		) return height - 51;
+		else if (
+			ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.REPLACE_REALMS ||
+			ModMenuConfig.MODS_BUTTON_STYLE.getValue() == ModMenuConfig.ModsButtonStyle.SHRINK
+		) return -99999;
 		return height;
 	}
 
@@ -36,13 +39,13 @@ public class MixinTitleScreen extends Screen {
 			ordinal = 0
 		)
 	)
-	private String onRender(String string) {
+	private String onRender( String string ) {
 		if ( ModMenuConfig.MODIFY_TITLE_SCREEN.getValue() && ModMenuConfig.MOD_COUNT_LOCATION.getValue().isOnTitleScreen() ) {
 			String count = ModMenu.getDisplayedModCount();
 			String specificKey = "modmenu.mods." + count;
-			String replacementKey = I18n.method_12500(specificKey) ? specificKey : "modmenu.mods.n";
+			String replacementKey = I18n.method_12500( specificKey ) ? specificKey : "modmenu.mods.n";
 
-			if ( ModMenuConfig.EASTER_EGGS.getValue() && I18n.method_12500(specificKey + ".secret") )
+			if ( ModMenuConfig.EASTER_EGGS.getValue() && I18n.method_12500( specificKey + ".secret" ) )
 				replacementKey = specificKey + ".secret";
 
 			return string + I18n.translate( replacementKey, count );

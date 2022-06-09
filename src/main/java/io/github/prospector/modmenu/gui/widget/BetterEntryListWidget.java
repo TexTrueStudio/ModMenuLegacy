@@ -116,7 +116,8 @@ public abstract class BetterEntryListWidget<E extends BetterEntryListWidget.Entr
 	class Entries extends AbstractList<E> {
 		private final List<E> entries = Lists.newArrayList();
 
-		Entries() { }
+		Entries() {
+		}
 
 		public E get( int i ) {
 			return this.entries.get( i );
@@ -145,7 +146,8 @@ public abstract class BetterEntryListWidget<E extends BetterEntryListWidget.Entr
 	public static abstract class Entry<E extends Entry<E>> implements EntryListWidget.Entry {
 		BetterEntryListWidget<E> parentList;
 
-		public Entry() { }
+		public Entry() {
+		}
 
 		public abstract void render( int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta );
 

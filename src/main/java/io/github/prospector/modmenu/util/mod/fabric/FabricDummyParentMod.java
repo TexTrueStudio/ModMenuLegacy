@@ -15,7 +15,7 @@ public class FabricDummyParentMod implements Mod {
 	private final String id;
 	private final FabricMod host;
 
-	public FabricDummyParentMod(FabricMod host, String id) {
+	public FabricDummyParentMod( FabricMod host, String id ) {
 		this.host = host;
 		this.id = id;
 	}
@@ -29,9 +29,9 @@ public class FabricDummyParentMod implements Mod {
 	public @NotNull String getName() {
 		FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
 		if ( parentData != null ) {
-			return parentData.getName().orElse("");
+			return parentData.getName().orElse( "" );
 		}
-		if ( id.equals("fabric") || id.equals("legacy-fabric-api") ) {
+		if ( id.equals( "fabric" ) || id.equals( "legacy-fabric-api" ) ) {
 			return "Legacy Fabric API";
 		}
 		return id;
@@ -42,20 +42,20 @@ public class FabricDummyParentMod implements Mod {
 		String iconSourceId = host.getId();
 		FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
 		String iconPath = null;
-		if (parentData != null) {
-			iconPath = parentData.getIcon().orElse(null);
+		if ( parentData != null ) {
+			iconPath = parentData.getIcon().orElse( null );
 		}
-		if ("inherit".equals(iconPath)) {
-			return host.getIcon(iconHandler, i);
+		if ( "inherit".equals( iconPath ) ) {
+			return host.getIcon( iconHandler, i );
 		}
-		if (iconPath == null) {
+		if ( iconPath == null ) {
 			iconSourceId = ModMenu.MOD_ID;
 			iconPath = "assets/" + ModMenu.MOD_ID + "/icons/unknown_parent.png";
 		}
 		final String finalIconSourceId = iconSourceId;
 		ModContainer iconSource = FabricLoader.getInstance()
-			.getModContainer(iconSourceId)
-			.orElseThrow( () -> new RuntimeException("Cannot get ModContainer for Fabric mod with id " + finalIconSourceId) );
+			.getModContainer( iconSourceId )
+			.orElseThrow( () -> new RuntimeException( "Cannot get ModContainer for Fabric mod with id " + finalIconSourceId ) );
 		return Objects.requireNonNull(
 			iconHandler.createIcon( iconSource, iconPath ),
 			"Mod icon for " + getId() + " is null somehow (should be filled with default in this case)"
@@ -70,8 +70,8 @@ public class FabricDummyParentMod implements Mod {
 	@Override
 	public @NotNull String getDescription() {
 		FabricMod.ModMenuData.DummyParentData parentData = host.getModMenuData().getDummyParentData();
-		if (parentData != null) {
-			return parentData.getDescription().orElse("");
+		if ( parentData != null ) {
+			return parentData.getDescription().orElse( "" );
 		}
 		return "";
 	}
@@ -103,8 +103,8 @@ public class FabricDummyParentMod implements Mod {
 			return parentData.getBadges();
 		}
 		Set<Badge> badges = new HashSet<>();
-		if ( id.equals("fabric") || id.equals("legacy-fabric-api") ) {
-			badges.add(Badge.LIBRARY);
+		if ( id.equals( "fabric" ) || id.equals( "legacy-fabric-api" ) ) {
+			badges.add( Badge.LIBRARY );
 		}
 		return badges;
 	}

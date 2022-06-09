@@ -1,7 +1,7 @@
 package io.github.prospector.modmenu.mixin;
 
 import io.github.prospector.modmenu.event.ModMenuEventHandler;
-import io.github.prospector.modmenu.imixin.ScreenAcessor;
+import io.github.prospector.modmenu.imixin.ScreenAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(Screen.class)
-public class ScreenMixin implements ScreenAcessor {
+public class ScreenMixin implements ScreenAccessor {
 	@Shadow
 	protected List<ButtonWidget> buttons;
 

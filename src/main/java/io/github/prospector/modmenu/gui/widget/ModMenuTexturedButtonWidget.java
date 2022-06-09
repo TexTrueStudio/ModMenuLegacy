@@ -17,10 +17,10 @@ public class ModMenuTexturedButtonWidget extends AbstractButtonWidget {
 	}
 
 	protected ModMenuTexturedButtonWidget( int id, int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, PressAction onPress ) {
-		this( id, x, y, width, height, u, v, texture, uWidth, vHeight, "", onPress, EMPTY);
+		this( id, x, y, width, height, u, v, texture, uWidth, vHeight, "", onPress, EMPTY );
 	}
 
-	public ModMenuTexturedButtonWidget(int id, int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, String message, PressAction onPress, TooltipSupplier tooltipSupplier) {
+	public ModMenuTexturedButtonWidget( int id, int x, int y, int width, int height, int u, int v, Identifier texture, int uWidth, int vHeight, String message, PressAction onPress, TooltipSupplier tooltipSupplier ) {
 		super( id, x, y, width, height, new LiteralText( message ), onPress, tooltipSupplier );
 		this.uWidth = uWidth;
 		this.vHeight = vHeight;
@@ -29,26 +29,26 @@ public class ModMenuTexturedButtonWidget extends AbstractButtonWidget {
 		this.texture = texture;
 	}
 
-	protected void setPos(int x, int y) {
+	protected void setPos( int x, int y ) {
 		this.x = x;
 		this.y = y;
 	}
 
 	@Override
-	public void method_891(MinecraftClient client, int mouseX, int mouseY, float tickDelta) {
+	public void method_891( MinecraftClient client, int mouseX, int mouseY, float tickDelta ) {
 		GlStateManager.color4f( 1, 1, 1, 1f );
 		client.getTextureManager().bindTexture( this.texture );
 		GlStateManager.disableDepthTest();
 		int adjustedV = this.v;
-		if (! this.active )
+		if ( !this.active )
 			adjustedV += this.height * 2;
-		else if ( this.isMouseOver( client, mouseX, mouseY) )
+		else if ( this.isMouseOver( client, mouseX, mouseY ) )
 			adjustedV += this.height;
 
 		drawTexture( this.x, this.y, this.u, adjustedV, this.width, this.height, this.uWidth, this.vHeight );
 		GlStateManager.enableDepthTest();
 
-		if ( this.isMouseOver( client, mouseX, mouseY) )
+		if ( this.isMouseOver( client, mouseX, mouseY ) )
 			this.renderToolTip( mouseX, mouseY );
 	}
 

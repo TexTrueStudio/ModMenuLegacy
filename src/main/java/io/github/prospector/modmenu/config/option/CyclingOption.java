@@ -22,99 +22,99 @@ import java.util.stream.Collectors;
 @Environment(EnvType.CLIENT)
 public class CyclingOption<T> extends Option {
 	private final CyclingOption.Setter<T> setter;
-	private final Function< GameOptions, T > getter;
-	private final Supplier< Builder<T> > buttonBuilderFactory;
-	private Function< MinecraftClient, TooltipFactory< T > > tooltips = client -> value -> ImmutableList.of();
+	private final Function<GameOptions, T> getter;
+	private final Supplier<Builder<T>> buttonBuilderFactory;
+	private Function<MinecraftClient, TooltipFactory<T>> tooltips = client -> value -> ImmutableList.of();
 
 	private CyclingOption(
-			String key,
-			Function< GameOptions, T > getter,
-			Setter<T> setter,
-			Supplier< Builder< T > > buttonBuilderFactory
+		String key,
+		Function<GameOptions, T> getter,
+		Setter<T> setter,
+		Supplier<Builder<T>> buttonBuilderFactory
 	) {
-		super(key);
+		super( key );
 		this.getter = getter;
 		this.setter = setter;
 		this.buttonBuilderFactory = buttonBuilderFactory;
 	}
 
 	public static <T> CyclingOption<T> create(
-			String key,
-			List<T> values,
-			Function< T, Text > valueToText,
-			Function< GameOptions, T > getter,
-			Setter<T> setter
+		String key,
+		List<T> values,
+		Function<T, Text> valueToText,
+		Function<GameOptions, T> getter,
+		Setter<T> setter
 	) {
-		return new CyclingOption<>( key, getter, setter, () -> CyclingButtonWidget.builder(valueToText).values(values) );
+		return new CyclingOption<>( key, getter, setter, () -> CyclingButtonWidget.builder( valueToText ).values( values ) );
 	}
 
 	public static <T> CyclingOption<T> create(
-			String key,
-			Supplier< List<T> > valuesSupplier,
-			Function< T, Text > valueToText,
-			Function< GameOptions, T > getter,
-			Setter<T> setter
+		String key,
+		Supplier<List<T>> valuesSupplier,
+		Function<T, Text> valueToText,
+		Function<GameOptions, T> getter,
+		Setter<T> setter
 	) {
 		return new CyclingOption<>(
 			key,
 			getter,
 			setter,
-			() -> CyclingButtonWidget.builder(valueToText).values( valuesSupplier.get() )
+			() -> CyclingButtonWidget.builder( valueToText ).values( valuesSupplier.get() )
 		);
 	}
 
 	public static <T> CyclingOption<T> create(
-			String key,
-			List<T> defaults,
-			List<T> alternatives,
-			BooleanSupplier alternativeToggle,
-			Function< T, Text > valueToText,
-			Function< GameOptions, T > getter,
-			Setter<T> setter
+		String key,
+		List<T> defaults,
+		List<T> alternatives,
+		BooleanSupplier alternativeToggle,
+		Function<T, Text> valueToText,
+		Function<GameOptions, T> getter,
+		Setter<T> setter
 	) {
 		return new CyclingOption<>(
 			key,
 			getter,
 			setter,
-			() -> CyclingButtonWidget.builder(valueToText).values(alternativeToggle, defaults, alternatives)
+			() -> CyclingButtonWidget.builder( valueToText ).values( alternativeToggle, defaults, alternatives )
 		);
 	}
 
 	public static <T> CyclingOption<T> create(
-			String key,
-			T[] values,
-			Function<T, Text> valueToText,
-			Function< GameOptions, T > getter,
-			Setter<T> setter
+		String key,
+		T[] values,
+		Function<T, Text> valueToText,
+		Function<GameOptions, T> getter,
+		Setter<T> setter
 	) {
-		return new CyclingOption<>(key, getter, setter, () -> CyclingButtonWidget.builder(valueToText).values(values));
+		return new CyclingOption<>( key, getter, setter, () -> CyclingButtonWidget.builder( valueToText ).values( values ) );
 	}
 
 	public static CyclingOption<Boolean> create(
-			String key,
-			Text on,
-			Text off,
-			Function< GameOptions, Boolean > getter,
-			Setter<Boolean> setter
+		String key,
+		Text on,
+		Text off,
+		Function<GameOptions, Boolean> getter,
+		Setter<Boolean> setter
 	) {
-		return new CyclingOption<>(key, getter, setter, () -> CyclingButtonWidget.onOffBuilder(on, off));
+		return new CyclingOption<>( key, getter, setter, () -> CyclingButtonWidget.onOffBuilder( on, off ) );
 	}
 
 	public static CyclingOption<Boolean> create(
-			String key,
-			Function< GameOptions, Boolean > getter,
-			Setter<Boolean> setter
+		String key,
+		Function<GameOptions, Boolean> getter,
+		Setter<Boolean> setter
 	) {
-		return new CyclingOption<>(key, getter, setter, CyclingButtonWidget::onOffBuilder);
+		return new CyclingOption<>( key, getter, setter, CyclingButtonWidget::onOffBuilder );
 	}
 
 	public static CyclingOption<Boolean> create(
-			String key,
-			Text tooltip,
-			Function< GameOptions, Boolean > getter,
-			Setter<Boolean> setter
+		String key,
+		Text tooltip,
+		Function<GameOptions, Boolean> getter,
+		Setter<Boolean> setter
 	) {
-		return create(key, getter, setter).tooltip(
+		return create( key, getter, setter ).tooltip(
 			client -> value -> client.textRenderer
 				.wrapLines( tooltip.asFormattedString(), 200 )
 				.stream()
@@ -123,16 +123,16 @@ public class CyclingOption<T> extends Option {
 		);
 	}
 
-	public CyclingOption<T> tooltip(Function<MinecraftClient, TooltipFactory<T>> tooltips) {
+	public CyclingOption<T> tooltip( Function<MinecraftClient, TooltipFactory<T>> tooltips ) {
 		this.tooltips = tooltips;
 		return this;
 	}
 
-	public AbstractButtonWidget createButton(GameOptions options, int id, int x, int y, int width) {
+	public AbstractButtonWidget createButton( GameOptions options, int id, int x, int y, int width ) {
 		TooltipFactory<T> tooltipFactory = this.tooltips.apply( MinecraftClient.getInstance() );
 		return this.buttonBuilderFactory.get()
-			.tooltip(tooltipFactory)
-			.initially( this.getter.apply(options) )
+			.tooltip( tooltipFactory )
+			.initially( this.getter.apply( options ) )
 			.build(
 				id,
 				x,
@@ -150,7 +150,7 @@ public class CyclingOption<T> extends Option {
 	@FunctionalInterface
 	@Environment(EnvType.CLIENT)
 	public interface Setter<T> {
-		void accept(GameOptions gameOptions, Option option, T value);
+		void accept( GameOptions gameOptions, Option option, T value );
 	}
 }
 

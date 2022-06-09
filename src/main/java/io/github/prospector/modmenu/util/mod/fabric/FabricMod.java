@@ -91,11 +91,11 @@ public class FabricMod implements Mod {
 		if (
 			id.contains( "fabric" ) && (
 				id.equals( "fabricloader" ) ||
-				metadata.getProvides().contains( "fabricloader" ) ||
-				id.equals( "fabric" ) ||
-				id.equals( "legacy-fabric-api" ) ||
-				metadata.getProvides().contains( "fabric" ) ||
-				metadata.getProvides().contains( "legacy-fabric-api" )
+					metadata.getProvides().contains( "fabricloader" ) ||
+					id.equals( "fabric" ) ||
+					id.equals( "legacy-fabric-api" ) ||
+					metadata.getProvides().contains( "fabric" ) ||
+					metadata.getProvides().contains( "legacy-fabric-api" )
 			)
 		) modMenuData.badges.add( Badge.LIBRARY );
 

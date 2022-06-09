@@ -8,5 +8,5 @@ import net.minecraft.client.font.TextRenderer;
 @Mixin(TextRenderer.class)
 public interface TextRendererAccessor {
 	@Invoker
-	String callMirror(String text);
+	String callMirror( String text );
 }

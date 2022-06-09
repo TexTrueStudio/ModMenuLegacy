@@ -1,5 +1,5 @@
 package io.github.prospector.modmenu.imixin;
 
-public interface ButtonAcessor {
+public interface ButtonAccessor {
 	int modmenu$getHeight();
 }
