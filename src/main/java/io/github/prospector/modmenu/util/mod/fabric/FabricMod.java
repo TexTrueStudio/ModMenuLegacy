@@ -110,9 +110,6 @@ public class FabricMod implements Mod {
 		if ( "deprecated".equals( CustomValueUtil.getString( "fabric-api:module-lifecycle", metadata ).orElse( null ) ) ) {
 			badges.add( Badge.DEPRECATED );
 		}
-		if ( metadata.containsCustomValue( "patchwork:patcherMeta" ) ) {
-			badges.add( Badge.PATCHWORK_FORGE );
-		}
 		if ( "minecraft".equals( getId() ) ) {
 			badges.add( Badge.MINECRAFT );
 		}
