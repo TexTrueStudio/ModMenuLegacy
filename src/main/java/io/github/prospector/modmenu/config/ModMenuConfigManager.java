@@ -19,6 +19,7 @@ import java.lang.reflect.Type;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unchecked")
 public class ModMenuConfigManager {
 	private static final Logger LOGGER = LogManager.getLogger( "Mod Menu | Config Manager" );
 	private static final File file = new File( FabricLoader.getInstance().getGameDir().resolve( "config" ).toString(), ModMenu.MOD_ID + ".json" );
@@ -56,7 +57,6 @@ public class ModMenuConfigManager {
 								if ( generic instanceof Class<?> ) {
 									EnumConfigOption<?> option = (EnumConfigOption<?>) field.get( null );
 									Enum<?> found = null;
-									//noinspection unchecked
 									for ( Enum<?> value : ( (Class<Enum<?>>) generic ).getEnumConstants() ) {
 										if ( value.name().toLowerCase( Locale.ROOT ).equals( jsonPrimitive.getAsString() ) ) {
 											found = value;
