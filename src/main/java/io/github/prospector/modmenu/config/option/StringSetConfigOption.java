@@ -10,11 +10,11 @@ public class StringSetConfigOption {
 	private final String key, translationKey;
 	private final Set<String> defaultValue;
 
-	public StringSetConfigOption(String key, Set<String> defaultValue) {
+	public StringSetConfigOption( String key, Set<String> defaultValue ) {
 		super();
-		ConfigOptionStorage.setStringSet(key, defaultValue);
+		ConfigOptionStorage.setStringSet( key, defaultValue );
 		this.key = key;
-		this.translationKey = TranslationUtil.translationKeyOf("option", key);
+		this.translationKey = TranslationUtil.translationKeyOf( "option", key );
 		this.defaultValue = defaultValue;
 	}
 
@@ -23,15 +23,15 @@ public class StringSetConfigOption {
 	}
 
 	public Set<String> getValue() {
-		return ConfigOptionStorage.getStringSet(key);
+		return ConfigOptionStorage.getStringSet( key );
 	}
 
-	public void setValue(Set<String> value) {
-		ConfigOptionStorage.setStringSet(key, value);
+	public void setValue( Set<String> value ) {
+		ConfigOptionStorage.setStringSet( key, value );
 	}
 
 	public Text getMessage() {
-		return new TranslatableText(translationKey);
+		return new TranslatableText( translationKey );
 	}
 
 	public Set<String> getDefaultValue() {
