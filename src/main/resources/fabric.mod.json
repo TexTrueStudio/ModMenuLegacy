@@ -5,7 +5,7 @@
   "version": "$version",
   "environment": "client",
   "license": "MIT",
-  "icon": "assets/modmenu/icon.png",
+  "icon": "assets/modmenu/icons/icon.png",
   "entrypoints": {
     "client": [
       "io.github.prospector.modmenu.ModMenu"
