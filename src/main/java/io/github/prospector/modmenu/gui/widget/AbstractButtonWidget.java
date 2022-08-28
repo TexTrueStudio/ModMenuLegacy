@@ -10,8 +10,7 @@ import org.lwjgl.input.Mouse;
 import java.util.function.Consumer;
 
 public class AbstractButtonWidget extends ButtonWidget {
-	public static final TooltipSupplier EMPTY = ( button, mouseX, mouseY ) -> {
-	};
+	public static final TooltipSupplier EMPTY = ( button, mouseX, mouseY ) -> { };
 
 	private final TooltipSupplier tooltipSupplier;
 	private PressAction onPress;
@@ -37,7 +36,7 @@ public class AbstractButtonWidget extends ButtonWidget {
 
 	// renderButton
 	@Override
-	public void method_891( MinecraftClient client, int mouseX, int mouseY, float tickDelta ) {
+	public void render( MinecraftClient client, int mouseX, int mouseY ) {
 		if ( this.visible ) {
 			TextRenderer textRenderer = client.textRenderer;
 			client.getTextureManager().bindTexture( WIDGETS_LOCATION );
@@ -47,8 +46,8 @@ public class AbstractButtonWidget extends ButtonWidget {
 
 			int yOffset = this.getYImage( this.hovered );
 			GlStateManager.enableBlend();
-			GlStateManager.method_12288( GlStateManager.class_2870.field_13525, GlStateManager.class_2866.field_13480, GlStateManager.class_2870.field_13518, GlStateManager.class_2866.field_13484 );
-			GlStateManager.method_12287( GlStateManager.class_2870.field_13525, GlStateManager.class_2866.field_13480 );
+			GlStateManager.blendFuncSeparate( 770, 771, 1, 0 );
+			GlStateManager.blendFunc( 770, 771 );
 			this.drawTexture( this.x, this.y, 0, 46 + yOffset * 20, this.width / 2, this.height );
 			this.drawTexture( this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + yOffset * 20, this.width / 2, this.height );
 			this.renderBg( client, mouseX, mouseY );
