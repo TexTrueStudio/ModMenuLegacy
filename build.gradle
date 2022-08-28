@@ -9,14 +9,9 @@ version = "$mod_version+$minecraft_version"
 group = maven_group
 
 repositories {
-	maven {
-		name 'legacy-fabric'
-		url 'https://maven.legacyfabric.net'
-	}
-	maven {
-		name 'Jitpack'
-		url 'https://jitpack.io'
-	}
+	maven { url 'https://jitpack.io' }
+	maven { url 'https://maven.legacyfabric.net' }
+	maven { url 'https://repsy.io/mvn/enderzombi102/mc' }
 }
 
 loom {
@@ -31,6 +26,7 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:$loader_version"
 	modImplementation "net.legacyfabric.legacy-fabric-api:legacy-fabric-api:$fabric_version+$minecraft_version"
 
+	implementation include( "com.enderzombi102.EnderLib:jvm8:$enderlib_version" )
 	implementation "com.google.guava:guava:$guava_version"
 }
 
