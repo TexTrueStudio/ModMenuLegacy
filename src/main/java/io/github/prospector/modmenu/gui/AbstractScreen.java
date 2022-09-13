@@ -34,7 +34,7 @@ public abstract class AbstractScreen extends Screen {
 
 	protected void renderButtons( int mouseX, int mouseY, float tickDelta ) {
 		for ( ButtonWidget widget : this.buttons ) {
-			widget.method_891( this.client, mouseX, mouseY, tickDelta );
+			widget.render( this.client, mouseX, mouseY );
 			if ( widget.isMouseOver( this.client, mouseX, mouseY ) ) {
 				widget.renderToolTip( mouseX, mouseY );
 			}

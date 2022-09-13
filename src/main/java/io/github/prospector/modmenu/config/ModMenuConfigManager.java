@@ -90,7 +90,10 @@ public class ModMenuConfigManager {
 					} else if ( StringSetConfigOption.class.isAssignableFrom( field.getType() ) ) {
 						StringSetConfigOption option = (StringSetConfigOption) field.get( null );
 						JsonArray array = new JsonArray();
-						ConfigOptionStorage.getStringSet( option.getKey() ).forEach( array::add );
+						ConfigOptionStorage.getStringSet( option.getKey() )
+							.stream()
+							.map( JsonPrimitive::new )
+							.forEach( array::add );
 						config.add( field.getName().toLowerCase( Locale.ROOT ), array );
 					} else if ( EnumConfigOption.class.isAssignableFrom( field.getType() ) && field.getGenericType() instanceof ParameterizedType ) {
 						Type generic = ( (ParameterizedType) field.getGenericType() ).getActualTypeArguments()[0];

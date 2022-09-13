@@ -6,7 +6,6 @@ import io.github.prospector.modmenu.api.Mod;
 import io.github.prospector.modmenu.config.ModMenuConfig;
 import io.github.prospector.modmenu.gui.widget.ModListWidget;
 import io.github.prospector.modmenu.util.mod.ModSearch;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.util.Identifier;
@@ -27,10 +26,9 @@ public class ParentEntry extends ModListEntry {
 		this.list = list;
 	}
 
-	// render()
 	@Override
-	public void method_6700( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
-		super.method_6700( index, x, y, rowWidth, rowHeight, mouseX, mouseY, hovered, tickDelta );
+	public void render( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered ) {
+		super.render( index, x, y, rowWidth, rowHeight, mouseX, mouseY, hovered );
 		TextRenderer textRenderer = client.textRenderer;
 		int childrenBadgeHeight = textRenderer.fontHeight;
 		//noinspection SuspiciousNameCombination

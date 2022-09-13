@@ -18,7 +18,6 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -26,8 +25,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
+
+import static io.github.prospector.modmenu.util.TranslationUtil.hasTranslation;
 
 public class ModMenu implements ClientModInitializer {
 	public static final String MOD_ID = "modmenu";
@@ -171,8 +175,8 @@ public class ModMenu implements ClientModInitializer {
 				modsText.append( new LiteralText( " " ) ).append( new TranslatableText( "modmenu.loaded.short", count ) );
 			} else {
 				String specificKey = "modmenu.loaded." + count;
-				String key = I18n.method_12500( specificKey ) ? specificKey : "modmenu.loaded";
-				if ( ModMenuConfig.EASTER_EGGS.getValue() && I18n.method_12500( specificKey + ".secret" ) )
+				String key = hasTranslation( specificKey ) ? specificKey : "modmenu.loaded";
+				if ( ModMenuConfig.EASTER_EGGS.getValue() && hasTranslation( specificKey + ".secret" ) )
 					key = specificKey + ".secret";
 				modsText.append( new LiteralText( " " ) ).append( new TranslatableText( key, count ) );
 			}

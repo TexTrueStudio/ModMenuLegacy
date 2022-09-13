@@ -108,19 +108,17 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 
 		@Override
 		public void render( int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
-			this.method_6700( index, x, y, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta );
+			this.render( index, x, y, entryWidth, entryHeight, mouseX, mouseY, hovered );
 		}
 
 		@Override
-		public void method_9473( int i, int j, int k, float f ) {
-		}
+		public void updatePosition( int index, int x, int y ) { }
 
-		// render()
 		@Override
-		public void method_6700( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
+		public void render( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered ) {
 			this.buttons.forEach( button -> {
 				button.y = y;
-				button.method_891( MinecraftClient.getInstance(), mouseX, mouseY, tickDelta );
+				button.render( MinecraftClient.getInstance(), mouseX, mouseY );
 			} );
 		}
 

@@ -165,7 +165,7 @@ public class ModsScreen extends AbstractScreen {
 			( AbstractButtonWidget button, int mouseX, int mouseY ) -> this.setTooltip( CONFIGURE )
 		) {
 			@Override
-			public void method_891( MinecraftClient client, int mouseX, int mouseY, float tickDelta ) {
+			public void render( MinecraftClient client, int mouseX, int mouseY ) {
 				if ( selected != null ) {
 					String modid = selected.getMod().getId();
 					active = modHasConfigScreen.get( modid );
@@ -173,7 +173,7 @@ public class ModsScreen extends AbstractScreen {
 					active = false;
 				visible = active;
 				if ( visible )
-					super.method_891( client, mouseX, mouseY, tickDelta );
+					super.render( client, mouseX, mouseY );
 			}
 		};
 		int urlButtonWidths = paneWidth / 2 - 2;
@@ -188,10 +188,10 @@ public class ModsScreen extends AbstractScreen {
 			button -> openLink( Mod::getWebsite )
 		) {
 			@Override
-			public void method_891( MinecraftClient minecraftClient, int i, int j, float f ) {
+			public void render( MinecraftClient minecraftClient, int mouseX, int mouseY ) {
 				visible = selected != null;
 				active = visible && selected.getMod().getWebsite() != null;
-				super.method_891( minecraftClient, i, j, f );
+				super.render( minecraftClient, mouseX, mouseY );
 			}
 		};
 		ButtonWidget issuesButton = new AbstractButtonWidget(
@@ -205,15 +205,15 @@ public class ModsScreen extends AbstractScreen {
 		) {
 
 			@Override
-			public void method_891( MinecraftClient client, int mouseX, int mouseY, float tickDelta ) {
+			public void render( MinecraftClient client, int mouseX, int mouseY ) {
 				visible = selected != null;
 				active = visible && selected.getMod().getIssueTracker() != null;
-				super.method_891( client, mouseX, mouseY, tickDelta );
+				super.render( client, mouseX, mouseY );
 			}
 		};
 		this.addChild( this.modList );
 		this.addChild( this.searchBox );
-		this.method_13411( new ModMenuTexturedButtonWidget(
+		this.buttons.add( new ModMenuTexturedButtonWidget(
 			994,
 			paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2,
 			22,
@@ -235,7 +235,7 @@ public class ModsScreen extends AbstractScreen {
 		filtersWidth = showLibrariesWidth + sortingWidth + 2;
 		searchRowWidth = searchBoxX + searchBoxWidth + 22;
 		updateFiltersX();
-		this.method_13411( new AbstractButtonWidget(
+		this.buttons.add( new AbstractButtonWidget(
 			994,
 			filtersX,
 			45,
@@ -250,7 +250,7 @@ public class ModsScreen extends AbstractScreen {
 		) {
 
 			@Override
-			public void method_891( MinecraftClient minecraftClient, int i, int j, float f ) {
+			public void render( MinecraftClient minecraftClient, int mouseX, int mouseY ) {
 				GlStateManager.translatef( 0, 0, 1 );
 				visible = filterOptionsShown;
 				String name = I18n.translate( "option." + ModMenu.MOD_ID + "." + ModMenuConfig.SORTING.getKey() );
@@ -260,10 +260,10 @@ public class ModsScreen extends AbstractScreen {
 						"." + ModMenuConfig.SORTING.getValue().toString().toLowerCase( Locale.ROOT )
 				);
 				this.setMessage( new LiteralText( name + ": " + value ) );
-				super.method_891( minecraftClient, i, j, f );
+				super.render( minecraftClient, mouseX, mouseY );
 			}
 		} );
-		this.method_13411( new AbstractButtonWidget(
+		this.buttons.add( new AbstractButtonWidget(
 			993,
 			filtersX + sortingWidth + 2,
 			45,
@@ -277,7 +277,7 @@ public class ModsScreen extends AbstractScreen {
 			}
 		) {
 			@Override
-			public void method_891( MinecraftClient minecraftClient, int i, int j, float f ) {
+			public void render( MinecraftClient minecraftClient, int mouseX, int mouseY ) {
 				GlStateManager.translatef( 0, 0, 1 );
 				visible = filterOptionsShown;
 				String name = I18n.translate( "option." + ModMenu.MOD_ID + "." + ModMenuConfig.SHOW_LIBRARIES.getKey() );
@@ -287,16 +287,16 @@ public class ModsScreen extends AbstractScreen {
 						"." + Boolean.toString( ModMenuConfig.SHOW_LIBRARIES.getValue() ).toLowerCase( Locale.ROOT )
 				);
 				this.setMessage( new LiteralText( name + ": " + value ) );
-				super.method_891( minecraftClient, i, j, f );
+				super.render( minecraftClient, mouseX, mouseY );
 			}
 		} );
 		if ( !ModMenuConfig.HIDE_CONFIG_BUTTONS.getValue() ) {
-			this.method_13411( configureButton );
+			this.buttons.add( configureButton );
 		}
-		this.method_13411( websiteButton );
-		this.method_13411( issuesButton );
+		this.buttons.add( websiteButton );
+		this.buttons.add( issuesButton );
 		this.addChild( this.descriptionListWidget );
-		this.method_13411( new AbstractButtonWidget(
+		this.buttons.add( new AbstractButtonWidget(
 			992,
 			this.width / 2 - 154,
 			this.height - 28,
@@ -305,7 +305,7 @@ public class ModsScreen extends AbstractScreen {
 			new TranslatableText( "modmenu.modsFolder" ),
 			button -> UrlUtil.getOperatingSystem().open( new File( FabricLoader.getInstance().getGameDir().toFile(), "mods" ) )
 		) );
-		this.method_13411( new AbstractButtonWidget(
+		this.buttons.add( new AbstractButtonWidget(
 			993,
 			this.width / 2 + 4,
 			this.height - 28,
@@ -327,7 +327,7 @@ public class ModsScreen extends AbstractScreen {
 	protected void mouseClicked( int mouseX, int mouseY, int button ) {
 		super.mouseClicked( mouseX, mouseY, button );
 		this.modList.mouseClicked( mouseX, mouseY, button );
-		this.searchBox.method_920( mouseX, mouseY, button );
+		this.searchBox.mouseClicked( mouseX, mouseY, button );
 	}
 
 	@Override

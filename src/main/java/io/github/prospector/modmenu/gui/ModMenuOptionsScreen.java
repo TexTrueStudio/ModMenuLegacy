@@ -27,7 +27,7 @@ public class ModMenuOptionsScreen extends AbstractScreen {
 		this.list = new ButtonListWidget( this.client, this.width, this.height, 32, this.height - 32, 25 );
 		this.list.addAll( ModMenuConfig.asOptions(), 998 );
 		this.addChild( this.list );
-		this.method_13411( new AbstractButtonWidget(
+		this.buttons.add( new AbstractButtonWidget(
 			999,
 			this.width / 2 - 100,
 			this.height - 27,

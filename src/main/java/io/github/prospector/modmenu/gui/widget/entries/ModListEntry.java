@@ -14,12 +14,11 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.util.Identifier;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import static io.github.prospector.modmenu.util.TranslationUtil.hasTranslation;
 
 public class ModListEntry extends BetterEntryListWidget.Entry<ModListEntry> {
 	public static final Identifier UNKNOWN_ICON = new Identifier( "textures/misc/unknown_pack.png" );
-	private static final Logger LOGGER = LogManager.getLogger();
 
 	protected final MinecraftClient client;
 	protected final Mod mod;
@@ -34,20 +33,16 @@ public class ModListEntry extends BetterEntryListWidget.Entry<ModListEntry> {
 		this.client = MinecraftClient.getInstance();
 	}
 
-	// updatePosition()
 	@Override
-	public void method_9473( int index, int x, int y, float tickDelta ) {
-		// NO-OP
-	}
+	public void updatePosition( int index, int x, int y ) { }
 
 	@Override
 	public void render( int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
-		this.method_6700( index, x, y, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta );
+		this.render( index, x, y, entryWidth, entryHeight, mouseX, mouseY, hovered );
 	}
 
-	// render()
 	@Override
-	public void method_6700( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
+	public void render( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered ) {
 		x += getXOffset();
 		rowWidth -= getXOffset();
 		int iconSize = ModMenuConfig.COMPACT_LIST.getValue() ? COMPACT_ICON_SIZE : FULL_ICON_SIZE;
@@ -72,9 +67,9 @@ public class ModListEntry extends BetterEntryListWidget.Entry<ModListEntry> {
 			String summary = mod.getSummary();
 			String translatableSummaryKey = "modmenu.summaryTranslation." + mod.getId();
 			String translatableDescriptionKey = "modmenu.descriptionTranslation." + mod.getId();
-			if ( I18n.method_12500( translatableSummaryKey ) ) {
+			if ( hasTranslation( translatableSummaryKey ) ) {
 				summary = I18n.translate( translatableSummaryKey );
-			} else if ( I18n.method_12500( translatableDescriptionKey ) ) {
+			} else if ( hasTranslation( translatableDescriptionKey ) ) {
 				summary = I18n.translate( translatableDescriptionKey );
 			}
 			DrawingUtil.drawWrappedString( summary, ( x + iconSize + 3 + 4 ), ( y + client.textRenderer.fontHeight + 2 ), rowWidth - iconSize - 7, 2, 0x808080 );

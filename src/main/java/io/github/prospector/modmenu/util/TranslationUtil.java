@@ -45,7 +45,7 @@ public class TranslationUtil {
 				}
 			}
 			lastKey = fullKey.toString();
-			if ( I18n.method_12500( lastKey ) ) {
+			if ( hasTranslation( lastKey ) ) {
 				return new TranslatableText( lastKey, realArgs );
 			}
 		}
@@ -54,5 +54,9 @@ public class TranslationUtil {
 
 	public static String translationKeyOf( String type, String id ) {
 		return type + "." + ModMenu.MOD_ID + "." + id;
+	}
+
+	public static boolean hasTranslation( String key ) {
+		return !I18n.translate( key ).equals( key );
 	}
 }

@@ -1,6 +1,5 @@
 package io.github.prospector.modmenu.gui.widget;
 
-import com.google.common.util.concurrent.Runnables;
 import io.github.prospector.modmenu.api.Mod;
 import io.github.prospector.modmenu.config.ModMenuConfig;
 import io.github.prospector.modmenu.gui.ModsScreen;
@@ -19,6 +18,8 @@ import net.minecraft.util.Formatting;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static io.github.prospector.modmenu.util.TranslationUtil.hasTranslation;
 
 public class DescriptionListWidget extends BetterEntryListWidget<DescriptionListWidget.DescriptionEntry> {
 	private final ModsScreen parent;
@@ -57,7 +58,7 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 				Mod mod = lastSelected.getMod();
 				String description = mod.getDescription();
 				String translatableDescriptionKey = "modmenu.descriptionTranslation." + mod.getId();
-				if ( I18n.method_12500( translatableDescriptionKey ) ) {
+				if ( hasTranslation( translatableDescriptionKey ) ) {
 					description = I18n.translate( translatableDescriptionKey );
 				}
 				if ( !description.isEmpty() ) {
@@ -138,12 +139,11 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 
 		@Override
 		public void render( int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
-			this.method_6700( index, x, y, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta );
+			this.render( index, x, y, entryWidth, entryHeight, mouseX, mouseY, hovered );
 		}
 
-		// render()
 		@Override
-		public void method_6700( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
+		public void render( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered ) {
 			MinecraftClient.getInstance().textRenderer.drawWithShadow( text, x, y, 0xAAAAAA );
 		}
 
@@ -153,13 +153,11 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 		}
 
 		@Override
-		public void mouseReleased( int index, int mouseX, int mouseY, int button, int x, int y ) {
-		}
+		public void mouseReleased( int index, int mouseX, int mouseY, int button, int x, int y ) { }
 
 		// updatePosition
 		@Override
-		public void method_9473( int index, int x, int y, float tickDelta ) {
-		}
+		public void updatePosition( int index, int x, int y ) { }
 	}
 
 	protected class LinkEntry extends DescriptionEntry {
@@ -171,7 +169,7 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 		}
 
 		@Override
-		public void method_6700( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
+		public void render( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered ) {
 			MinecraftClient.getInstance().textRenderer.drawWithShadow( text, x, y, 0x5555ff );
 		}
 
@@ -201,16 +199,9 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 		@Override
 		public boolean mouseClicked( int index, int mouseX, int mouseY, int button, int x, int y ) {
 			if ( isMouseOver( mouseX, mouseY ) ) {
-				client.openScreen( new MinecraftCredits( false ) );
+				client.openScreen( new CreditsScreen() );
 			}
 			return super.mouseClicked( index, mouseX, mouseY, button, x, y );
-		}
-
-		class MinecraftCredits extends CreditsScreen {
-			@SuppressWarnings("UnstableApiUsage")
-			public MinecraftCredits( boolean endCredits ) {
-				super( endCredits, Runnables.doNothing() );
-			}
 		}
 	}
 }
