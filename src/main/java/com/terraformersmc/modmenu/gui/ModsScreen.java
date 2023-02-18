@@ -105,16 +105,7 @@ public class ModsScreen extends AbstractScreen {
 				ModsScreen.this.modList.filter( text, false );
 			}
 		} );
-		this.modList = new ModListWidget(
-			this.client,
-			this.paneWidth,
-			this.height,
-			this.paneY + 19,
-			this.height - 36,
-			ModMenuConfig.COMPACT_LIST.getValue() ? 23 : 36,
-			this.searchBox.getText(),
-			this
-		);
+		this.modList = new ModListWidget(this.client, this.paneWidth, this.height, this.paneY + 19, this.height - 36, ModMenuConfig.COMPACT_LIST.getValue() ? 23 : 36, this.searchBox.getText(), this);
 		this.modList.setXPos( 0 );
 		modList.reloadFilters();
 
@@ -133,29 +124,9 @@ public class ModsScreen extends AbstractScreen {
 			}
 		}
 
-		this.descriptionListWidget = new DescriptionListWidget(
-			this.client,
-			paneWidth,
-			this.height,
-			paneY + 60,
-			this.height - 36,
-			textRenderer.fontHeight + 1,
-			this
-		);
+		this.descriptionListWidget = new DescriptionListWidget(this.client, paneWidth, this.height, paneY + 60, this.height - 36, textRenderer.fontHeight + 1, this);
 		this.descriptionListWidget.setXPos( rightPaneX );
-		ButtonWidget configureButton = new ModMenuTexturedButtonWidget(
-			999,
-			width - 24,
-			paneY,
-			20,
-			20,
-			0,
-			0,
-			CONFIGURE_BUTTON_LOCATION,
-			32,
-			64,
-			"",
-			button -> {
+		ButtonWidget configureButton = new ModMenuTexturedButtonWidget(999, width - 24, paneY, 20, 20, 0, 0, CONFIGURE_BUTTON_LOCATION, 32, 64, "", button -> {
 				final String modid = Objects.requireNonNull( selected ).getMod().getId();
 				if ( modHasConfigScreen.get( modid ) ) {
 					Screen configScreen = ModMenu.getConfigScreen( modid, this );
@@ -167,7 +138,7 @@ public class ModsScreen extends AbstractScreen {
 			(AbstractButtonWidget button, int mouseX, int mouseY ) -> this.setTooltip( CONFIGURE )
 		) {
 			@Override
-			public void render( MinecraftClient client, int mouseX, int mouseY ) {
+			public void method_891( MinecraftClient client, int mouseX, int mouseY, float tickDelta ) {
 				if ( selected != null ) {
 					String modid = selected.getMod().getId();
 					active = modHasConfigScreen.get( modid );
@@ -175,61 +146,30 @@ public class ModsScreen extends AbstractScreen {
 					active = false;
 				visible = active;
 				if ( visible )
-					super.render( client, mouseX, mouseY );
+					super.method_891( client, mouseX, mouseY, tickDelta );
 			}
 		};
 		int urlButtonWidths = paneWidth / 2 - 2;
 		int cappedButtonWidth = Math.min( urlButtonWidths, 200 );
-		ButtonWidget websiteButton = new AbstractButtonWidget(
-			996,
-			rightPaneX + ( urlButtonWidths / 2 ) - ( cappedButtonWidth / 2 ),
-			paneY + 36,
-			Math.min( urlButtonWidths, 200 ),
-			20,
-			new TranslatableText( "modmenu.website" ),
-			button -> openLink( Mod::getWebsite )
-		) {
+		ButtonWidget websiteButton = new AbstractButtonWidget(996, rightPaneX + ( urlButtonWidths / 2 ) - ( cappedButtonWidth / 2 ), paneY + 36, Math.min( urlButtonWidths, 200 ), 20, new TranslatableText( "modmenu.website" ), button -> openLink( Mod::getWebsite )) {
 			@Override
-			public void render( MinecraftClient minecraftClient, int mouseX, int mouseY ) {
+			public void method_891( MinecraftClient client, int mouseX, int mouseY, float tickDelta ) {
 				visible = selected != null;
 				active = visible && selected.getMod().getWebsite() != null;
-				super.render( minecraftClient, mouseX, mouseY );
+				super.method_891( client, mouseX, mouseY, tickDelta );
 			}
 		};
-		ButtonWidget issuesButton = new AbstractButtonWidget(
-			995,
-			rightPaneX + urlButtonWidths + 4 + ( urlButtonWidths / 2 ) - ( cappedButtonWidth / 2 ),
-			paneY + 36,
-			Math.min( urlButtonWidths, 200 ),
-			20,
-			new TranslatableText( "modmenu.issues" ),
-			button -> openLink( Mod::getIssueTracker )
-		) {
-
+		ButtonWidget issuesButton = new AbstractButtonWidget(995, rightPaneX + urlButtonWidths + 4 + ( urlButtonWidths / 2 ) - ( cappedButtonWidth / 2 ), paneY + 36, Math.min( urlButtonWidths, 200 ), 20, new TranslatableText( "modmenu.issues" ), button -> openLink( Mod::getIssueTracker )) {
 			@Override
-			public void render( MinecraftClient client, int mouseX, int mouseY ) {
+			public void method_891( MinecraftClient client, int mouseX, int mouseY, float tickDelta ) {
 				visible = selected != null;
 				active = visible && selected.getMod().getIssueTracker() != null;
-				super.render( client, mouseX, mouseY );
+				super.method_891( client, mouseX, mouseY, tickDelta );
 			}
 		};
 		this.addChild( this.modList );
 		this.addChild( this.searchBox );
-		this.buttons.add( new ModMenuTexturedButtonWidget(
-			994,
-			paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2,
-			22,
-			20,
-			20,
-			0,
-			0,
-			FILTERS_BUTTON_LOCATION,
-			32,
-			64,
-			"",
-			button -> filterOptionsShown = !filterOptionsShown,
-			( AbstractButtonWidget button, int mouseX, int mouseY ) -> this.setTooltip( TOGGLE_FILTER_OPTIONS )
-		) );
+		this.buttons.add( new ModMenuTexturedButtonWidget(994, paneWidth / 2 + searchBoxWidth / 2 - 20 / 2 + 2, 22, 20, 20, 0, 0, FILTERS_BUTTON_LOCATION, 32, 64, "", button -> filterOptionsShown = !filterOptionsShown, ( AbstractButtonWidget button, int mouseX, int mouseY ) -> this.setTooltip( TOGGLE_FILTER_OPTIONS )) );
 		Text showLibrariesText = ModMenuConfig.SHOW_LIBRARIES.getButtonText();
 		Text sortingText = ModMenuConfig.SORTING.getButtonText();
 		int showLibrariesWidth = textRenderer.getStringWidth( showLibrariesText.asFormattedString() ) + 20;
@@ -237,22 +177,15 @@ public class ModsScreen extends AbstractScreen {
 		filtersWidth = showLibrariesWidth + sortingWidth + 2;
 		searchRowWidth = searchBoxX + searchBoxWidth + 22;
 		updateFiltersX();
-		this.buttons.add( new AbstractButtonWidget(
-			994,
-			filtersX,
-			45,
-			sortingWidth,
-			20,
-			sortingText,
-			button -> {
+		this.buttons.add( new AbstractButtonWidget(994, filtersX, 45, sortingWidth, 20, sortingText, button -> {
 				ModMenuConfig.SORTING.cycleValue();
 				ModMenuConfigManager.save();
 				modList.reloadFilters();
-			}
-		) {
+
+		}) {
 
 			@Override
-			public void render( MinecraftClient minecraftClient, int mouseX, int mouseY ) {
+			public void method_891( MinecraftClient client, int mouseX, int mouseY, float tickDelta ) {
 				GlStateManager.translate( 0, 0, 1 );
 				visible = filterOptionsShown;
 				String name = I18n.translate( "option." + ModMenu.MOD_ID + "." + ModMenuConfig.SORTING.getKey() );
@@ -262,24 +195,17 @@ public class ModsScreen extends AbstractScreen {
 						"." + ModMenuConfig.SORTING.getValue().toString().toLowerCase( Locale.ROOT )
 				);
 				this.setMessage( new LiteralText( name + ": " + value ) );
-				super.render( minecraftClient, mouseX, mouseY );
+				super.method_891( client, mouseX, mouseY, tickDelta );
 			}
 		} );
-		this.buttons.add( new AbstractButtonWidget(
-			993,
-			filtersX + sortingWidth + 2,
-			45,
-			showLibrariesWidth,
-			20,
-			showLibrariesText,
-			button -> {
+		this.buttons.add( new AbstractButtonWidget(993, filtersX + sortingWidth + 2, 45, showLibrariesWidth, 20, showLibrariesText, button -> {
 				ModMenuConfig.SHOW_LIBRARIES.toggleValue();
 				ModMenuConfigManager.save();
 				modList.reloadFilters();
 			}
 		) {
 			@Override
-			public void render( MinecraftClient minecraftClient, int mouseX, int mouseY ) {
+			public void method_891( MinecraftClient client, int mouseX, int mouseY, float tickDelta ) {
 				GlStateManager.translate( 0, 0, 1 );
 				visible = filterOptionsShown;
 				String name = I18n.translate( "option." + ModMenu.MOD_ID + "." + ModMenuConfig.SHOW_LIBRARIES.getKey() );
@@ -289,7 +215,7 @@ public class ModsScreen extends AbstractScreen {
 						"." + Boolean.toString( ModMenuConfig.SHOW_LIBRARIES.getValue() ).toLowerCase( Locale.ROOT )
 				);
 				this.setMessage( new LiteralText( name + ": " + value ) );
-				super.render( minecraftClient, mouseX, mouseY );
+				super.method_891( client, mouseX, mouseY, tickDelta );
 			}
 		} );
 		if ( !ModMenuConfig.HIDE_CONFIG_BUTTONS.getValue() ) {
@@ -298,24 +224,8 @@ public class ModsScreen extends AbstractScreen {
 		this.buttons.add( websiteButton );
 		this.buttons.add( issuesButton );
 		this.addChild( this.descriptionListWidget );
-		this.buttons.add( new AbstractButtonWidget(
-			992,
-			this.width / 2 - 154,
-			this.height - 28,
-			150,
-			20,
-			new TranslatableText( "modmenu.modsFolder" ),
-			button -> UrlUtil.getOperatingSystem().open( new File( FabricLoader.getInstance().getGameDir().toFile(), "mods" ) )
-		) );
-		this.buttons.add( new AbstractButtonWidget(
-			993,
-			this.width / 2 + 4,
-			this.height - 28,
-			150,
-			20,
-			ScreenTexts.DONE,
-			button -> client.setScreen( this.getPreviousScreen() )
-		) );
+		this.buttons.add( new AbstractButtonWidget(992, this.width / 2 - 154, this.height - 28, 150, 20, new TranslatableText( "modmenu.modsFolder" ), button -> UrlUtil.getOperatingSystem().open( new File( FabricLoader.getInstance().getGameDir().toFile(), "mods" ) )) );
+		this.buttons.add( new AbstractButtonWidget(993, this.width / 2 + 4, this.height - 28, 150, 20, ScreenTexts.DONE, button -> client.setScreen( this.getPreviousScreen() )) );
 
 		init = true;
 	}
@@ -329,7 +239,8 @@ public class ModsScreen extends AbstractScreen {
 	protected void mouseClicked( int mouseX, int mouseY, int button ) {
 		super.mouseClicked( mouseX, mouseY, button );
 		this.modList.mouseClicked( mouseX, mouseY, button );
-		this.searchBox.mouseClicked( mouseX, mouseY, button );
+		this.searchBox.method_920( mouseX, mouseY, button );
+		this.descriptionListWidget.mouseClicked( mouseX, mouseY, button );
 	}
 
 	@Override
@@ -411,14 +322,7 @@ public class ModsScreen extends AbstractScreen {
 				} else {
 					authors = names.get( 0 );
 				}
-				DrawingUtil.drawWrappedString(
-					I18n.translate( "modmenu.authorPrefix", authors ),
-					x + imageOffset,
-					paneY + 2 + lineSpacing * 2,
-					paneWidth - imageOffset - 4,
-					1,
-					0x808080
-				);
+				DrawingUtil.drawWrappedString(I18n.translate( "modmenu.authorPrefix", authors ), x + imageOffset, paneY + 2 + lineSpacing * 2, paneWidth - imageOffset - 4, 1, 0x808080);
 			}
 		}
 		if ( this.tooltip != null ) {
@@ -530,9 +434,7 @@ public class ModsScreen extends AbstractScreen {
 					UrlUtil.getOperatingSystem().open( linkProducer.apply( mod ) );
 				this.client.setScreen( this );
 			},
-			linkProducer.apply( mod ),
-			999,
-			false
+			linkProducer.apply( mod ), 999, false
 		) );
 	}
 }

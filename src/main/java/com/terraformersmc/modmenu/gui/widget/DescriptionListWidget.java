@@ -1,5 +1,6 @@
 package com.terraformersmc.modmenu.gui.widget;
 
+import com.google.common.util.concurrent.Runnables;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import com.terraformersmc.modmenu.gui.ModsScreen;
 import com.terraformersmc.modmenu.config.ModMenuConfig;
@@ -140,11 +141,11 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 
 		@Override
 		public void render( int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
-			this.render( index, x, y, entryWidth, entryHeight, mouseX, mouseY, hovered );
+			this.method_6700( index, x, y, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta );
 		}
 
 		@Override
-		public void render( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered ) {
+		public void method_6700( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
 			MinecraftClient.getInstance().textRenderer.drawWithShadow( text, x, y, 0xAAAAAA );
 		}
 
@@ -156,9 +157,11 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 		@Override
 		public void mouseReleased( int index, int mouseX, int mouseY, int button, int x, int y ) { }
 
-		// updatePosition
+		//updatePosition
 		@Override
-		public void updatePosition( int index, int x, int y ) { }
+		public void method_9473( int index, int x, int y, float tickDelta ) {
+
+		}
 	}
 
 	protected class LinkEntry extends DescriptionEntry {
@@ -170,7 +173,7 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 		}
 
 		@Override
-		public void render( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered ) {
+		public void method_6700( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
 			MinecraftClient.getInstance().textRenderer.drawWithShadow( text, x, y, 0x5555ff );
 		}
 
@@ -200,7 +203,7 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 		@Override
 		public boolean mouseClicked( int index, int mouseX, int mouseY, int button, int x, int y ) {
 			if ( isMouseOver( mouseX, mouseY ) ) {
-				client.setScreen( new CreditsScreen() );
+				client.setScreen( new CreditsScreen(false, Runnables.doNothing()) );
 			}
 			return super.mouseClicked( index, mouseX, mouseY, button, x, y );
 		}

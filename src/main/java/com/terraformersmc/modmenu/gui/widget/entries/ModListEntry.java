@@ -33,16 +33,17 @@ public class ModListEntry extends BetterEntryListWidget.Entry<ModListEntry> {
 		this.client = MinecraftClient.getInstance();
 	}
 
+	//updatePosition
 	@Override
-	public void updatePosition( int index, int x, int y ) { }
+	public void method_9473( int index, int x, int y, float tickDelta ) { }
 
 	@Override
 	public void render( int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
-		this.render( index, x, y, entryWidth, entryHeight, mouseX, mouseY, hovered );
+		this.method_6700( index, x, y, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta );
 	}
 
 	@Override
-	public void render( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered ) {
+	public void method_6700( int index, int x, int y, int rowWidth, int rowHeight, int mouseX, int mouseY, boolean hovered, float tickDelta ) {
 		x += getXOffset();
 		rowWidth -= getXOffset();
 		int iconSize = ModMenuConfig.COMPACT_LIST.getValue() ? COMPACT_ICON_SIZE : FULL_ICON_SIZE;

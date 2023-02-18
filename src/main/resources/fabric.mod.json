@@ -23,11 +23,11 @@
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
-    "mixins.modmenu.json"
+    "modmenu.mixins.json"
   ],
   "depends": {
-    "fabric-api": "*",
+    "legacy-fabric-api": "*",
     "fabricloader": ">=0.11.1",
-    "minecraft": "1.11.x"
+    "minecraft": "1.12.x"
   }
 }

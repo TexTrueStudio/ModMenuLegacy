@@ -36,7 +36,7 @@ public class AbstractButtonWidget extends ButtonWidget {
 
 	// renderButton
 	@Override
-	public void render( MinecraftClient client, int mouseX, int mouseY ) {
+	public void method_891( MinecraftClient client, int mouseX, int mouseY, float tickDelta ) {
 		if ( this.visible ) {
 			TextRenderer textRenderer = client.textRenderer;
 			client.getTextureManager().bindTexture( WIDGETS_LOCATION );
