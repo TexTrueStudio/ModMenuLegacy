@@ -1,11 +1,6 @@
-# ModMenu
-~~Hard to be more descriptive than that.~~ It enriches the standard Minecraft menu with an interface displaying a one-dimensional array of modifications
+# ModMenu-Legacy
 
-
-
-A picture's worth 2 words
-
-![](https://gitlab.com/ENDERZOMBI102/modmenu-legacy/-/raw/1.12.2/images/mods_menu_screenshot.png?inline=false "Mod Menu")
+Base
 
 ### Developers:
 - Mod Menu is on maven at: https://maven.fabricmc.net/io/github/prospector/modmenu/

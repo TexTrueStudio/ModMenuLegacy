@@ -8,10 +8,10 @@
   "icon": "assets/modmenu/icons/icon.png",
   "entrypoints": {
     "client": [
-      "io.github.prospector.modmenu.ModMenu"
+      "com.terraformersmc.modmenu.ModMenu"
     ],
     "modmenu": [
-      "io.github.prospector.modmenu.ModMenuModMenuCompat"
+      "com.terraformersmc.modmenu.ModMenuModMenuCompat"
     ]
   },
   "contact": {
@@ -19,34 +19,15 @@
     "issues": "https://github.com/Prospector/ModMenu/issues"
   },
   "authors": [
-    "Prospector",
-    "ENDERZOMBI102"
-  ],
-  "contributors": [
-    "Daniel She",
-    "Draylar",
-    "Mordna",
-    "Madis0",
-    "Yanis48",
-    "Boundarybreaker",
-    "fewizz",
-    "XuyuEre",
-    "geniiii",
-    "thiagokenis",
-    "Juuxel",
-    "InsomniaKitten",
-    "modmuss50",
-    "Patbox",
-    "Lykrast",
-    "Pyrofab",
-    "UpcraftLP",
-    "swordglowsblue",
-    "HowardZHY"
+    "TexTrue, TexTrueStudio", "Prospector", "ENDERZOMBI102"
   ],
   "description": "Adds a mod menu to view the list of mods you have installed.",
   "mixins": [
     "mixins.modmenu.json"
   ],
   "depends": {
+    "fabric-api": "*",
+    "fabricloader": ">=0.11.1",
+    "minecraft": "1.8.x"
   }
 }
