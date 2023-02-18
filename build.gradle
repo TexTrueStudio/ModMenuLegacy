@@ -37,9 +37,9 @@ dependencies {
 	mappings "net.legacyfabric:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modImplementation ("net.legacyfabric.legacy-fabric-api:legacy-fabric-api:${fabric_version}") {
-		exclude module: "legacy-fabric-entity-events-v1"
- 	}
+	//modImplementation ("net.legacyfabric.legacy-fabric-api:legacy-fabric-api:${fabric_version}") {
+	//	exclude module: "legacy-fabric-entity-events-v1"
+ 	//}
 
 }
 
