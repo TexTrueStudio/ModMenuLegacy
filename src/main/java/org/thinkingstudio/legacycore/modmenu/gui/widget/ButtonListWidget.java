@@ -2,13 +2,12 @@ package org.thinkingstudio.legacycore.modmenu.gui.widget;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.client.class_1803;
-import net.minecraft.client.option.GameOptions;
 import org.thinkingstudio.legacycore.modmenu.config.option.Option;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.options.GameOptions;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -19,11 +18,6 @@ import java.util.Optional;
 public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.ButtonEntry> {
 	public ButtonListWidget( MinecraftClient minecraftClient, int width, int height, int top, int bottom, int itemHeight ) {
 		super( minecraftClient, width, height, top, bottom, itemHeight );
-	}
-
-	@Override
-	public class_1803 method_6697(int i) {
-		return null;
 	}
 
 	public int addSingleOptionEntry( Option option, int id ) {
@@ -78,8 +72,8 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 	}
 
 	@Override
-	public void method_9529() {
-		super.method_9529();
+	public void handleMouse() {
+		super.handleMouse();
 		for ( ButtonEntry entry : this.children() )
 			entry.buttons.forEach( AbstractButtonWidget::handleMouse );
 	}
@@ -94,7 +88,7 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 			this.buttons = ImmutableList.copyOf( optionsToButtons.values() );
 		}
 
-		public static ButtonListWidget.ButtonEntry create(GameOptions options, int id, int width, Option option ) {
+		public static ButtonListWidget.ButtonEntry create( GameOptions options, int id, int width, Option option ) {
 			return new ButtonListWidget.ButtonEntry( ImmutableMap.of(
 				option, option.createButton( options, id, width / 2 - 155, 0, 310 )
 			) );
