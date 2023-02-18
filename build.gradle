@@ -3,11 +3,10 @@ plugins {
 	id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version
+version = "${project.mod_version}-${project.minecraft_version}"
 group = project.maven_group
 
 repositories {
@@ -28,13 +27,6 @@ loom {
 	
 	// Only needed for versions not available from vanilla launcher by default.
 	// customMinecraftManifest.set("https://meta.legacyfabric.net/v2/manifest/${minecraft_version}")
-
-	// Required by 1.7.x
-	runs {
-		client {
-			programArgs "--userProperties", "{}"
-		}
-	}
 }
 
 def lwjgl2 = !project.minecraft_version.startsWith("1.13")
