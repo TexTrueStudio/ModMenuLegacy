@@ -2,12 +2,12 @@ package org.thinkingstudio.legacycore.modmenu.gui.widget;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.client.option.GameOptions;
 import org.thinkingstudio.legacycore.modmenu.config.option.Option;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.options.GameOptions;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -88,7 +88,7 @@ public class ButtonListWidget extends BetterEntryListWidget<ButtonListWidget.But
 			this.buttons = ImmutableList.copyOf( optionsToButtons.values() );
 		}
 
-		public static ButtonListWidget.ButtonEntry create( GameOptions options, int id, int width, Option option ) {
+		public static ButtonListWidget.ButtonEntry create(GameOptions options, int id, int width, Option option ) {
 			return new ButtonListWidget.ButtonEntry( ImmutableMap.of(
 				option, option.createButton( options, id, width / 2 - 155, 0, 310 )
 			) );

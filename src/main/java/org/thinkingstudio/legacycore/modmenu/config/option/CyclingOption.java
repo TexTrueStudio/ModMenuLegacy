@@ -1,12 +1,12 @@
 package org.thinkingstudio.legacycore.modmenu.config.option;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.client.option.GameOptions;
 import org.thinkingstudio.legacycore.modmenu.gui.widget.AbstractButtonWidget;
 import org.thinkingstudio.legacycore.modmenu.gui.widget.CyclingButtonWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.GameOptions;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 

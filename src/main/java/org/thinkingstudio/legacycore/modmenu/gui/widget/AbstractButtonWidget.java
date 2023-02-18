@@ -40,7 +40,7 @@ public class AbstractButtonWidget extends ButtonWidget {
 		if ( this.visible ) {
 			TextRenderer textRenderer = client.textRenderer;
 			client.getTextureManager().bindTexture( WIDGETS_LOCATION );
-			GlStateManager.color4f( 1.0F, 1.0F, 1.0F, 1.0F );
+			GlStateManager.color( 1.0F, 1.0F, 1.0F, 1.0F );
 
 			this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 

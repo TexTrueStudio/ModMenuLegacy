@@ -177,11 +177,11 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 		@Override
 		public boolean mouseClicked( int index, int mouseX, int mouseY, int button, int x, int y ) {
 			if ( isMouseOver( mouseX, mouseY ) ) {
-				client.openScreen( new ConfirmChatLinkScreen(
+				client.setScreen( new ConfirmChatLinkScreen(
 					( open, c ) -> {
 						if ( open )
 							UrlUtil.getOperatingSystem().open( link );
-						client.openScreen( parent );
+						client.setScreen( parent );
 					},
 					link,
 					9999,
@@ -200,7 +200,7 @@ public class DescriptionListWidget extends BetterEntryListWidget<DescriptionList
 		@Override
 		public boolean mouseClicked( int index, int mouseX, int mouseY, int button, int x, int y ) {
 			if ( isMouseOver( mouseX, mouseY ) ) {
-				client.openScreen( new CreditsScreen() );
+				client.setScreen( new CreditsScreen() );
 			}
 			return super.mouseClicked( index, mouseX, mouseY, button, x, y );
 		}

@@ -1,7 +1,7 @@
 package org.thinkingstudio.legacycore.modmenu.config.option;
 
+import net.minecraft.client.option.GameOptions;
 import org.thinkingstudio.legacycore.modmenu.gui.widget.AbstractButtonWidget;
-import net.minecraft.client.options.GameOptions;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
