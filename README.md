@@ -23,8 +23,4 @@ You can view the features more in-depth on the [Mod Menu wiki](https://github.co
 
 If you are a developer and would like to see what metadata Mod Menu will make use of, how to add Library or Client-side only badges to your mod, or how to make your Config screens accessible via Mod Menu, check out [the API documentation on the Mod Menu wiki](https://github.com/TexTrueStudio/ModMenuLegacy/wiki/API)
 
-### Translators
-
-Mod Menu uses [Crowdin](https://crowdin.com/project/mod-menu), the same cloud-based localization management tool that Minecraft uses.
-
 ### Mod Menu Legacy is a mod for Legacy Fabric, and there are no plans to port this mod to Legacy Forge.
