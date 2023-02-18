@@ -68,7 +68,7 @@ public class CyclingButtonWidget<T> extends AbstractButtonWidget {
 
 	private void cycle( int amount ) {
 		List<T> list = this.values.getCurrent();
-		this.index = MathHelper.floorMod( this.index + amount, list.size() );
+		this.index = MathHelper.floorDiv( this.index + amount, list.size() );
 		T object = list.get( this.index );
 		this.internalSetValue( object );
 		this.callback.onValueChange( this, object );
@@ -77,7 +77,7 @@ public class CyclingButtonWidget<T> extends AbstractButtonWidget {
 	@SuppressWarnings("SameParameterValue")
 	private T getValue( int offset ) {
 		List<T> list = this.values.getCurrent();
-		return list.get( MathHelper.floorMod( this.index + offset, list.size() ) );
+		return list.get( MathHelper.floorDiv( this.index + offset, list.size() ) );
 	}
 
 	@Override
